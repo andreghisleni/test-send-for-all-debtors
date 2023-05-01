@@ -5,6 +5,7 @@ import cors from 'cors';
 import express, { Request, Response, NextFunction } from 'express';
 import 'express-async-errors';
 import { createServer } from 'http';
+import path from 'node:path';
 import socketIo from 'socket.io';
 
 import { uploadConfig } from '@config/upload';
@@ -56,6 +57,7 @@ app.set('trust proxy', true);
   });
 })();
 app.use('/files', express.static(uploadConfig.uploadsFolder));
+app.use('/public', express.static(path.resolve(__dirname, 'public')));
 app.use(rateLimiter);
 app.use(routes);
 
