@@ -1,0 +1,316 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model agencias {
+  id_ag         Int      @id @default(autoincrement())
+  banco         String   @db.VarChar(5)
+  nroag         String?  @db.VarChar(5)
+  dvagencia     String?  @db.VarChar(1)
+  conta         String?  @db.VarChar(12)
+  dvconta       String?  @db.VarChar(1)
+  juros         Float?   @db.Float
+  carteira      String?  @db.VarChar(2)
+  convenio      String?  @db.VarChar(20)
+  cedente       String?  @db.VarChar(8)
+  protesto      Int?
+  dias_protesto Int?
+  multa         Float?   @db.Float
+  despbanc      Float?   @db.Float
+  variacao      String?  @db.Char(5)
+  tarifa        Decimal? @db.Decimal(8, 2)
+  posto         String?  @db.Char(2)
+  cliente       Int?
+}
+
+model bancos {
+  cod  String @db.VarChar(5)
+  nome String @db.VarChar(60)
+
+  @@id([cod, nome])
+}
+
+model cidades {
+  id_cidade  Int     @id @default(autoincrement())
+  nomecidade String? @db.VarChar(100)
+  uf         String? @db.VarChar(2)
+}
+
+model clientes {
+  id         Int       @id @default(autoincrement())
+  nome       String    @unique @db.VarChar(50)
+  cpf        String?   @db.VarChar(18)
+  fone       String    @db.VarChar(15)
+  celular    String    @db.VarChar(15)
+  email      String    @db.VarChar(40)
+  endereco   String    @db.VarChar(70)
+  cidade     String    @db.VarChar(40)
+  cep        String    @db.VarChar(9)
+  uf         String    @db.VarChar(2)
+  bairro     String    @db.VarChar(50)
+  observacao String    @db.VarChar(200)
+  valorfrete Decimal?  @db.Decimal(10, 2)
+  cliente    Int
+  datacadas  DateTime? @db.Date
+  origem     Int?
+  vendas     vendas[]
+}
+
+model compras {
+  id_compra  Int       @default(autoincrement())
+  fornecedor Int
+  obs        String?   @db.VarChar(250)
+  data       DateTime? @db.Date
+  formapagto Int?
+  frete      Float?    @db.Float
+  cliente    Int
+
+  @@id([id_compra, fornecedor])
+}
+
+model conservacao {
+  id_con          Int     @id @default(autoincrement())
+  nomeconservacao String? @db.VarChar(255)
+}
+
+model contas {
+  id        Int     @id @default(autoincrement())
+  descricao String? @db.VarChar(50)
+  agencia   String? @db.VarChar(5)
+  dvagencia String? @db.VarChar(1)
+  conta     String? @db.VarChar(10)
+  dvconta   String? @db.VarChar(1)
+}
+
+model continentes {
+  id_cont   Int     @id @default(autoincrement())
+  descricao String? @db.VarChar(35)
+}
+
+model controle {
+  codigo      Int      @id @default(autoincrement())
+  nomeempresa String   @db.VarChar(50)
+  endereco    String?  @db.VarChar(60)
+  cidade      Int
+  bairro      String   @db.VarChar(30)
+  cep         String   @db.VarChar(9)
+  fone        String   @db.VarChar(15)
+  email       String   @db.VarChar(40)
+  cnpj        String   @db.VarChar(18)
+  data        DateTime @db.Date
+  banco       Int?
+  sindico     Int?
+  celular     String?  @db.VarChar(20)
+  situacao    Int?
+  mens1       String?  @db.LongText
+  mens2       String?  @db.LongText
+  mens3       String?  @db.LongText
+  mens4       String?  @db.LongText
+  mens5       String?  @db.LongText
+  cliente     Int
+  pix         String?  @db.VarChar(50)
+}
+
+model demandas {
+  id_demanda Int       @id @default(autoincrement())
+  moeda      Int?
+  data       DateTime? @db.Date
+  obs        String?   @db.LongText
+  codcliente Int?
+}
+
+model demandas_sacola {
+  id_demanda  Int?
+  id_sacola   Int       @id @default(autoincrement())
+  datasaida   DateTime? @db.Date
+  cliente     Int?
+  qtde        Float?    @db.Float
+  valor       Float?    @db.Float
+  venda       Int?
+  codvendedor Int?
+}
+
+model formapagar {
+  id_cond       Int     @id @default(autoincrement())
+  nomepagamento String? @db.VarChar(255)
+
+  vendas vendas[]
+}
+
+model itenscompra {
+  id_compra Int    @id @default(autoincrement())
+  moeda     Int
+  qtde      Float? @db.Float
+  valor     Float? @db.Float
+}
+
+model marketing {
+  id          Int     @id @default(autoincrement())
+  codcidade   Int?
+  nomeempresa String? @db.VarChar(60)
+  endereco    String? @db.VarChar(60)
+  cep         String? @db.VarChar(10)
+  bairro      String? @db.VarChar(50)
+  email       String? @db.VarChar(100)
+  fone        String? @db.VarChar(15)
+  celular     String? @db.VarChar(15)
+  ramo        Int?
+  mensagem    String? @db.Text
+  link        String? @db.VarChar(255)
+  alinhamento Int?
+  status      Int?
+}
+
+model material {
+  id_mat       Int    @default(autoincrement())
+  nomematerial String @db.VarChar(50)
+
+  @@id([id_mat, nomematerial])
+}
+
+model moedas {
+  id           Int     @id @default(autoincrement())
+  nome         String? @db.VarChar(50)
+  estoque      Int?
+  custo        Float?  @db.Float
+  venda        Float?  @db.Float
+  ano          Int?
+  material     Int?
+  periodo      String? @db.VarChar(255)
+  codigo       String? @db.VarChar(10)
+  estado       Int?
+  comemorativa String? @db.VarChar(50)
+  codcliente   Int
+
+  pais    Int?
+  country pais?    @relation(fields: [pais], references: [id_pais])
+  sacola  sacola[]
+}
+
+model pagar {
+  id_desp    Int       @default(autoincrement())
+  controle   Int
+  condominio Int
+  titulo     Int       @unique(map: "titulo")
+  vencimento DateTime  @db.Date
+  fornecedor Int
+  valor      Decimal   @db.Decimal(10, 2)
+  pagamento  DateTime? @db.Date
+  valorpago  Decimal?  @db.Decimal(10, 2)
+  tipotitulo Int?
+  conta      Int
+  juros      Decimal?  @db.Decimal(8, 2)
+  obs        String?   @db.VarChar(255)
+
+  @@id([id_desp, condominio, controle, conta])
+}
+
+model pais {
+  id_pais       Int      @id @default(autoincrement())
+  nomepais      String?  @db.VarChar(100)
+  id_continente Int?
+  moedas        moedas[]
+}
+
+model ramo_atividade {
+  id        Int     @id @default(autoincrement())
+  descricao String? @db.VarChar(50)
+}
+
+model receber {
+  id_rec     Int      @default(autoincrement())
+  venda      Int
+  data       DateTime @db.Date
+  valor      Float?   @db.Float
+  codcliente Int?
+  vendas     vendas?  @relation(fields: [venda], references: [id_venda])
+
+  @@id([id_rec, data, venda])
+}
+
+model sacola {
+  id_sacola  Int       @id @default(autoincrement())
+  moeda      Int?
+  qtde       Int?
+  valor      Float?    @db.Float
+  datasaida  DateTime? @db.Date
+  codcliente Int?
+  vendedor   Int?
+  id_venda   Int
+
+  vendas  vendas  @relation(fields: [id_venda], references: [id_venda])
+  product moedas? @relation(fields: [moeda], references: [id])
+}
+
+model sacola_copy1 {
+  id_venda  Int
+  id_sacola Int       @id @default(autoincrement())
+  moeda     Int?
+  qtde      Int?
+  valor     Float?    @db.Float
+  datasaida DateTime? @db.Date
+}
+
+model taborigem {
+  id_orig    Int     @id @default(autoincrement())
+  nomeorigem String? @db.VarChar(50)
+  padrao     Int?
+}
+
+model tabtitulos {
+  id        Int     @id @default(autoincrement())
+  descricao String? @db.VarChar(255)
+  divisao   Int?
+}
+
+model tabusers {
+  id       Int     @id @default(autoincrement())
+  email    String  @db.VarChar(30)
+  senha    String  @db.VarChar(15)
+  nome     String  @db.VarChar(30)
+  nivel    Int
+  situacao Int
+  telefone String? @db.VarChar(15)
+  cliente  Int
+}
+
+model tabvendedores {
+  id_ven       Int     @id @default(autoincrement())
+  nomevendedor String? @db.VarChar(50)
+  padrao       Int?
+}
+
+model vendas {
+  id_venda   Int       @id @default(autoincrement())
+  data       DateTime? @db.Date
+  obs        String?   @db.VarChar(255)
+  frete      Float?    @db.Float
+  desconto   Float?    @db.Float
+  status     Int?
+  codcliente Int
+
+  cliente    Int
+  formapagto Int?
+  formapagar formapagar? @relation(references: [id_cond], fields: [formapagto])
+  clientes   clientes?   @relation(fields: [cliente], references: [id])
+
+  produtos sacola[]
+  receber  receber[]
+}
+
+model vendas_copy1 {
+  id_venda   Int       @id @default(autoincrement())
+  cliente    Int
+  data       DateTime? @db.Date
+  formapagto Int?
+  obs        String?   @db.VarChar(255)
+  frete      Float?    @db.Float
+  desconto   Float?    @db.Float
+  status     Int?
+  codcliente Int
+}

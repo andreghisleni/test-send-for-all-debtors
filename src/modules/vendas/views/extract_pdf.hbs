@@ -1,0 +1,143 @@
+<style>
+  .container {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 800px;
+    font-size: 18px;
+    line-height: 21px;
+
+    padding: 24px 32px;
+
+    width: 100%;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .table td,
+  .table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  .table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  .table tr:hover {
+    background-color: #ddd;
+  }
+
+  .table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+  }
+</style>
+
+<div class="container">
+
+  <ul>
+    <li> <strong> Número da venda: </strong>{{id_venda}} </li>
+    <li> <strong> Cliente: </strong>{{nome_cliente}} </li>
+    <li> <strong> Data: </strong> {{data_venda}} </li>
+
+  </ul>
+
+
+  <table class="table">
+    <tr>
+      <th>Data</th>
+      <th>Produto</th>
+      <th>Código</th>
+      <th>Ano</th>
+      <th>Origem</th>
+      <th>Quantidade</th>
+      <th>Valor</th>
+    </tr>
+    {{#each produtos}}
+    <tr>
+      <td>{{data}}</td>
+      <td>{{nome}}</td>
+      <td>{{code}}</td>
+      <td>{{ano}}</td>
+      <td>{{origem}}</td>
+      <td>{{quantidade}}</td>
+      <td>{{valor}}</td>
+    </tr>
+    {{/each}}
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>Frete=</td>
+      <td></td>
+      <td>{{valor_frete}}</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>Desconto=</td>
+      <td></td>
+      <td>{{valor_desconto}}</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>Total</td>
+      <td>{{qtd_total}}</td>
+      <td>{{valor_total}}</td>
+    </tr>
+  </table>
+
+  <h3>Pagamentos</h3>
+
+
+  <table class="table">
+    <tr>
+      <th>Data do Pagamento</th>
+      <th>Tipo de Pagamento</th>
+      <th>Valor Pago</th>
+    </tr>
+    {{#each pagamentos}}
+    <tr>
+      <td>{{data}}</td>
+      <td>{{tipo}}</td>
+      <td>{{valor}}</td>
+    </tr>
+    {{/each}}
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Saldo=</td>
+      <td>{{saldo}}</td>
+    </tr>
+  </table>
+</div>
