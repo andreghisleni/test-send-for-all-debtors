@@ -5,6 +5,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['dev', 'production', 'test']).default('dev'),
   MODE: z.enum(['dev', 'production', 'test']).default('dev'),
   PORT: z.coerce.number().default(3333),
+  PORT_BULL: z.coerce.number().default(3334),
 
   APP_NAME: z.string(),
   APP_SECRET: z.string().default('default'),

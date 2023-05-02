@@ -129,18 +129,18 @@ export class ExportExtractAllToToPdfService {
       },
     });
 
-    const page = await browser.newPage();
+    // const page = await browser.newPage();
 
-    await page.setContent(htmlToPdf);
+    // await page.setContent(htmlToPdf);
 
-    const div_selector_to_remove = '.padding';
-    await page.evaluate(sel => {
-      const elements = document.querySelectorAll(sel);
-      // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < elements.length; i++) {
-        elements[i]?.classList?.remove('padding');
-      }
-    }, div_selector_to_remove);
+    // const div_selector_to_remove = '.padding';
+    // await page.evaluate(sel => {
+    //   const elements = document.querySelectorAll(sel);
+    //   // eslint-disable-next-line no-plusplus
+    //   for (let i = 0; i < elements.length; i++) {
+    //     elements[i]?.classList?.remove('padding');
+    //   }
+    // }, div_selector_to_remove);
 
     const name = `${venda.id_venda} - ${venda.clientes?.nome || ''} - ${fDate2(
       venda.data,
@@ -153,23 +153,23 @@ export class ExportExtractAllToToPdfService {
 
     const pathFile = path.resolve(folderName, `${name}.pdf`);
 
-    await page.pdf({
-      path: pathFile,
-      printBackground: true,
-      format: 'A4',
-      displayHeaderFooter: true,
-      margin: {
-        top: '1.5cm',
-        right: '1.5cm',
-        bottom: '2.5cm',
-        left: '1.5cm',
-      },
-      headerTemplate: '<div />',
-      footerTemplate:
-        '<div style="font-size: 11px !important; overflow: auto; margin-left: 1.5cm; margin-right: 1.5cm; color: ghostwhite;">Página <span class="pageNumber"></span> de <span class="totalPages"></span></div>',
-    });
+    // await page.pdf({
+    //   path: pathFile,
+    //   printBackground: true,
+    //   format: 'A4',
+    //   displayHeaderFooter: true,
+    //   margin: {
+    //     top: '1.5cm',
+    //     right: '1.5cm',
+    //     bottom: '2.5cm',
+    //     left: '1.5cm',
+    //   },
+    //   headerTemplate: '<div />',
+    //   footerTemplate:
+    //     '<div style="font-size: 11px !important; overflow: auto; margin-left: 1.5cm; margin-right: 1.5cm; color: ghostwhite;">Página <span class="pageNumber"></span> de <span class="totalPages"></span></div>',
+    // });
 
-    await page.close();
+    // await page.close();
 
     return pathFile;
   }

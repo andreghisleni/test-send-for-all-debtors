@@ -6,10 +6,13 @@ import { uploadConfig } from '@config/upload';
 import type { IStorageProvider } from '../models/IStorageProvider';
 
 export class DiskStorageProvider implements IStorageProvider {
-  public async saveFile(file: string): Promise<string> {
+  public async saveFile(file: string, isDownload = false): Promise<string> {
     await fs.promises.rename(
       path.resolve(uploadConfig.tmpFolder, file),
-      path.resolve(uploadConfig.uploadsFolder, file),
+      path.resolve(
+        isDownload ? uploadConfig.downloadsFolder : uploadConfig.uploadsFolder,
+        file,
+      ),
     );
     return file;
   }

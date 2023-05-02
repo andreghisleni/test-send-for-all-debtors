@@ -18,7 +18,7 @@ const limiter = new RateLimiterRedis({
   duration: 1,
 });
 
-export default async function rateLimiter(
+export async function rateLimiter(
   req: Request,
   res: Response,
   next: NextFunction,

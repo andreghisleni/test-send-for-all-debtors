@@ -12,7 +12,7 @@ import { uploadConfig } from '@config/upload';
 
 import AppError from '@shared/errors/AppError';
 
-import rateLimiter from './middlewares/rateLimiter';
+import { rateLimiter } from './middlewares/rateLimiter';
 import { routes } from './routes';
 
 import '@shared/container';
@@ -57,6 +57,7 @@ app.set('trust proxy', true);
   });
 })();
 app.use('/files', express.static(uploadConfig.uploadsFolder));
+app.use('/downloads', express.static(uploadConfig.downloadsFolder));
 app.use('/public', express.static(path.resolve(__dirname, 'public')));
 app.use(rateLimiter);
 app.use(routes);

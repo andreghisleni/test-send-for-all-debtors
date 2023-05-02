@@ -5,3 +5,4 @@ import './CacheProvider';
 import './GeocodeProvider';
 import './CacheProvider';
 import './ExcelGeneratorProvider';
+import './BackendJobs';

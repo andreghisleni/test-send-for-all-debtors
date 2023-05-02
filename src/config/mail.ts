@@ -14,8 +14,8 @@ export default {
   driver: env.MAIL_DRIVER || 'ethereal',
   defaults: {
     from: {
-      email: 'contato@desbravatec.com.br',
-      name: 'Equipe Desbravatec',
+      email: 'envio@andreg.com.br',
+      name: 'Equipe Marcon',
     },
   },
 } as IMailConfig;

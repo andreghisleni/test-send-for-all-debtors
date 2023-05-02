@@ -10,6 +10,7 @@ interface IUploadConfig {
 
   tmpFolder: string;
   uploadsFolder: string;
+  downloadsFolder: string;
 
   multer: {
     storage: StorageEngine;
@@ -27,6 +28,7 @@ export const uploadConfig: IUploadConfig = {
 
   tmpFolder,
   uploadsFolder: path.resolve(tmpFolder, 'uploads'),
+  downloadsFolder: path.resolve(tmpFolder, 'downloads'),
 
   multer: {
     storage: multer.diskStorage({

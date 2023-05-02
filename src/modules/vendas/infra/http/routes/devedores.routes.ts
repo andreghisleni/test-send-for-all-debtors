@@ -8,6 +8,9 @@ const exportDevedoresController = new ExportDevedoresController();
 const exportExtractDevedoresController = new ExportExtractDevedoresController();
 
 devedoresRoutes.get('/export/excel', exportDevedoresController.index);
-devedoresRoutes.get('/export/all', exportExtractDevedoresController.index);
+devedoresRoutes.get(
+  '/export/all/:email',
+  exportExtractDevedoresController.index,
+);
 
 export { devedoresRoutes };
