@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "tsup src --out-dir dist",
-    "build2": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
+    "build2": "tsup src --out-dir dist",
+    "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
     "dev": "npm-run-all -p dev:*",
     "dev:server": "tsx watch src/shared/infra/http/server.ts",
     "seed:dev": "tsx src/shared/infra/prisma/seed/run.ts",
