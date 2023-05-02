@@ -1,3 +1,4 @@
+import { env } from '@env';
 import { formatValueToBRL } from '@utils/formatValueToBRL';
 import { format } from 'date-fns';
 import path from 'node:path';
@@ -167,7 +168,7 @@ export class ExportExtractToToPdfService {
       html = await this.mailTemplateProvider.parse({
         file: extractPdfTemplate,
         variables: {
-          logo: 'http://localhost:3333/public/logo-marcon.png',
+          logo: `${env.APP_API_URL}/public/logo-marcon.png`,
           id_venda: devedore.id_venda,
           nome_cliente: devedore.clientes?.nome || '',
           data_venda: fDate(devedore.data),
@@ -193,7 +194,7 @@ export class ExportExtractToToPdfService {
             tipo: devedor.formapagar?.nomepagamento || '',
           })),
           saldo: formatValueToBRL(devedore.totalRecebido - devedore.total),
-          img_pix: 'http://localhost:3333/public/pix.png',
+          img_pix: `${env.APP_API_URL}/public/pix.png`,
         },
       });
     }

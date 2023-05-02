@@ -173,7 +173,7 @@ class Handle {
       headless: 'new',
     });
 
-    const perChunk = 4; // items per chunk
+    const perChunk = 10; // items per chunk
 
     const result = splitArray(vendas, perChunk) as IVenda[][];
 
@@ -231,7 +231,7 @@ class Handle {
 export default {
   key: 'GeneratePdfsAndCompact',
   limiter: {
-    max: 10,
+    max: 1,
     duration: 5000,
   },
   handle: async ({ data }: { data: IDataProps }): Promise<void> => {
