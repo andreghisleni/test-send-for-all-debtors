@@ -247,7 +247,7 @@ export class ExportExtractAllToToPdfService {
 
     const browser = await puppeteer.launch({
       headless: 'new',
-      defaultViewport: null,
+      // defaultViewport: null,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
 
