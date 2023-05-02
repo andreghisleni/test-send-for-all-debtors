@@ -7,10 +7,10 @@ const routes = Router();
 routes.use('/vendas', routesVendas);
 
 // routes.get('/devedores', async (req, res) => {
-//   // const devedores =
-//   //   await prisma.$executeRaw`SELECT * FROM vendas,clientes,formapagar WHERE vendas.formapagto=formapagar.id_cond and clientes.id=vendas.cliente and vendas.status=1 order by clientes.nome`;
+// const devedores =
+//   await prisma.$executeRaw`SELECT * FROM vendas,clientes,formapagar WHERE vendas.formapagto=formapagar.id_cond and clientes.id=vendas.cliente and vendas.status=1 order by clientes.nome`;
 
-//   // const devedores = await prisma.$executeRaw`SELECT * FROM formapagar`;
+// const devedores = await prisma.$executeRaw`SELECT * FROM formapagar`;
 //   const vendas = await prisma.vendas.findMany({
 //     include: {
 //       formapagar: true,
@@ -72,5 +72,4 @@ routes.use('/vendas', routesVendas);
 //     })),
 //   });
 // });
-
 export { routes };

@@ -8,7 +8,9 @@ module.exports = {
       alias: {
         '@modules': './src/modules',
         '@config': './src/config',
-        '@shared': './src/shared'
+        '@shared': './src/shared',
+        '@utils': './src/utils',
+        '@env': './src/env'
       }
     }],
     'babel-plugin-transform-typescript-metadata',
