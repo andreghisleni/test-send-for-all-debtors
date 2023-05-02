@@ -23,7 +23,7 @@ app.use(cors());
 app.use(rateLimiter);
 
 const serverAdapter = new ExpressAdapter();
-serverAdapter.setBasePath(process.env.MODE === 'prod' ? '/bull-board' : '/ui');
+serverAdapter.setBasePath(env.MODE === 'production' ? '/bull-board' : '/ui');
 
 createBullBoard({
   queues: queues.map(queue => new BullMQAdapter(queue.bull)),
