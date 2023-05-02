@@ -54,6 +54,8 @@ export class ExportExtractAllToToPdfService {
     const fDate = (d: Date | null) => (d ? format(d, 'dd/MM/yyyy') : '');
     const fDate2 = (d: Date | null) => (d ? format(d, 'yyyy-MM-dd') : '');
 
+    console.log('generatePdf', venda.id_venda);
+
     // await this.mailProvider.sendMail({
     //   to: {
     //     name: venda.clientes?.nome || '',
@@ -179,6 +181,7 @@ export class ExportExtractAllToToPdfService {
       'views',
       'extract_pdf.hbs',
     );
+    console.log('iniciando');
 
     const vendas = await prisma.vendas.findMany({
       include: {
