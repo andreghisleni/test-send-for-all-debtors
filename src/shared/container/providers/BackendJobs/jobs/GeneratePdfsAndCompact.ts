@@ -173,7 +173,7 @@ class Handle {
       headless: 'new',
     });
 
-    const perChunk = 10; // items per chunk
+    const perChunk = 6; // items per chunk
 
     const result = splitArray(vendas, perChunk) as IVenda[][];
 
