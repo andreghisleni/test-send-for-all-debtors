@@ -4,9 +4,9 @@ import { inject, injectable } from 'tsyringe';
 
 import mailConfig from '@config/mail';
 
-import { IMailTemplateProvider } from '../../MailTemplateProvider/models/IMailTemplateProvider';
-import { ISendMailDTO } from '../dtos/ISendMailDTO';
-import { IMailProvider } from '../models/IMailProvider';
+import type { IMailTemplateProvider } from '../../MailTemplateProvider/models/IMailTemplateProvider';
+import type { ISendMailDTO } from '../dtos/ISendMailDTO';
+import type { IMailProvider } from '../models/IMailProvider';
 
 @injectable()
 export class SESMailProvider implements IMailProvider {

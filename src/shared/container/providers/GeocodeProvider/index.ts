@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 
 import { GeocodeProvider } from './implementations/GeocodeProvider';
-import { IGeocodeProvider } from './models/IGeocodeProvider';
+import type { IGeocodeProvider } from './models/IGeocodeProvider';
 
 const providers = {
   google: GeocodeProvider,

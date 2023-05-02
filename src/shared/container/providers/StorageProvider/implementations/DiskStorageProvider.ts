@@ -3,7 +3,7 @@ import path from 'path';
 
 import { uploadConfig } from '@config/upload';
 
-import { IStorageProvider } from '../models/IStorageProvider';
+import type { IStorageProvider } from '../models/IStorageProvider';
 
 export class DiskStorageProvider implements IStorageProvider {
   public async saveFile(file: string): Promise<string> {

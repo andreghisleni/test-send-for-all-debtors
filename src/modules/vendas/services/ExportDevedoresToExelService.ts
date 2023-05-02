@@ -5,7 +5,7 @@ import { inject, injectable } from 'tsyringe';
 
 import { uploadConfig } from '@config/upload';
 
-import { IExcelGeneratorProvider } from '@shared/container/providers/ExcelGeneratorProvider/models/IExcelGeneratorProvider';
+import type { IExcelGeneratorProvider } from '@shared/container/providers/ExcelGeneratorProvider/models/IExcelGeneratorProvider';
 import { prisma } from '@shared/infra/prisma';
 
 // interface IRequest {

@@ -4,8 +4,8 @@ import path from 'node:path';
 import puppeteer from 'puppeteer';
 import { inject, injectable } from 'tsyringe';
 
-import { IMailProvider } from '@shared/container/providers/MailProvider/models/IMailProvider';
-import { IMailTemplateProvider } from '@shared/container/providers/MailTemplateProvider/models/IMailTemplateProvider';
+import type { IMailProvider } from '@shared/container/providers/MailProvider/models/IMailProvider';
+import type { IMailTemplateProvider } from '@shared/container/providers/MailTemplateProvider/models/IMailTemplateProvider';
 import AppError from '@shared/errors/AppError';
 import { prisma } from '@shared/infra/prisma';
 

@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 
 import { XlsxExcelGeneratorProvider } from './implementations/XlsxExcelGeneratorProvider';
-import { IExcelGeneratorProvider } from './models/IExcelGeneratorProvider';
+import type { IExcelGeneratorProvider } from './models/IExcelGeneratorProvider';
 
 const providers = {
   xlsx: XlsxExcelGeneratorProvider,

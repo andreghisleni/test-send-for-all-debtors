@@ -1,4 +1,4 @@
-import { IGeocodeProvider } from '../models/IGeocodeProvider';
+import type { IGeocodeProvider } from '../models/IGeocodeProvider';
 
 export class FakeGeocodeProvider implements IGeocodeProvider {
   public async get(_: string): Promise<{ lat: number; lng: number }> {

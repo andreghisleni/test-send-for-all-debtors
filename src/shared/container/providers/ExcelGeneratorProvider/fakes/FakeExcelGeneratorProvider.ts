@@ -1,4 +1,4 @@
-import { IExcelGeneratorProvider } from '../models/IExcelGeneratorProvider';
+import type { IExcelGeneratorProvider } from '../models/IExcelGeneratorProvider';
 
 export class FakeExcelGeneratorProvider implements IExcelGeneratorProvider {
   public async generate(): Promise<string> {

@@ -1,7 +1,7 @@
 import { env } from '@env';
 import { Client } from '@googlemaps/google-maps-services-js';
 
-import { IGeocodeProvider } from '../models/IGeocodeProvider';
+import type { IGeocodeProvider } from '../models/IGeocodeProvider';
 
 export class GeocodeProvider implements IGeocodeProvider {
   private client: Client;

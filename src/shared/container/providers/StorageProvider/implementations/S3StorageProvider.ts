@@ -5,7 +5,7 @@ import path from 'path';
 
 import { uploadConfig } from '@config/upload';
 
-import { IStorageProvider } from '../models/IStorageProvider';
+import type { IStorageProvider } from '../models/IStorageProvider';
 
 export class S3StorageProvider implements IStorageProvider {
   private client: S3;

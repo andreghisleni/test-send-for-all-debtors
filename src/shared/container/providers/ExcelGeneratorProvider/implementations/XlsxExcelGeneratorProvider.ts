@@ -3,8 +3,8 @@ import xlsx from 'xlsx';
 
 import { uploadConfig } from '@config/upload';
 
-import { IExcelGeneratorDTO } from '../dtos/IExcelGeneratorDTO';
-import { IExcelGeneratorProvider } from '../models/IExcelGeneratorProvider';
+import type { IExcelGeneratorDTO } from '../dtos/IExcelGeneratorDTO';
+import type { IExcelGeneratorProvider } from '../models/IExcelGeneratorProvider';
 
 export class XlsxExcelGeneratorProvider implements IExcelGeneratorProvider {
   public async generate({
