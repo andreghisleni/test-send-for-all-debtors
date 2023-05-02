@@ -147,6 +147,8 @@ export class ExportExtractAllToToPdfService {
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[&@\/\\#,+()$~%.'":*?<>{}]/g, ''); // eslint-disable-line no-useless-escape
 
+    console.log(name);
+
     const pathFile = path.resolve(folderName, `${name}.pdf`);
 
     await page.pdf({
