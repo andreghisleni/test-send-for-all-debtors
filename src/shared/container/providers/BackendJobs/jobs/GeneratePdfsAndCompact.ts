@@ -60,14 +60,18 @@ class Handle {
     extractPdfTemplate: string,
   ): Promise<string> {
     const fDate = (d: Date | null) => {
-      return d && d instanceof Date
-        ? format(parseISO(d.toDateString()), 'dd/MM/yyyy')
-        : '';
+      if (!d) return '';
+
+      return d instanceof Date
+        ? format(d, 'dd/MM/yyyy')
+        : format(parseISO(d), 'dd/MM/yyyy');
     };
     const fDate2 = (d: Date | null) => {
-      return d && d instanceof Date
-        ? format(parseISO(d.toDateString()), 'yyyy-MM-dd')
-        : '';
+      if (!d) return '';
+
+      return d instanceof Date
+        ? format(d, 'yyyy-MM-dd')
+        : format(parseISO(d), 'yyyy-MM-dd');
     };
 
     const htmlToPdf = await this.mailTemplateProvider.parse({
@@ -176,6 +180,21 @@ class Handle {
     const perChunk = 6; // items per chunk
 
     const result = splitArray(vendas, perChunk) as IVenda[][];
+
+    fs.writeFileSync(
+      path.resolve(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        '..',
+        '..',
+        '..',
+        'tmp',
+        `test.json`,
+      ),
+      JSON.stringify(vendas, null, 2),
+    );
 
     // eslint-disable-next-line no-restricted-syntax
     for (const vendasChunk of result) {
