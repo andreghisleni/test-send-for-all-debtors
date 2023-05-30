@@ -3,6 +3,7 @@ import { Prisma, vendas } from '@prisma/client';
 import { formatValueToBRL } from '@utils/formatValueToBRL';
 import { splitArray } from '@utils/splitArray';
 import AdmZip from 'adm-zip';
+import limit from 'cpulimit';
 import { format, parseISO } from 'date-fns';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -179,7 +180,7 @@ class Handle {
 
     const perChunk = 6; // items per chunk
 
-    const result = splitArray(vendas, perChunk) as IVenda[][];
+    const result = splitArray(vendas, perChunk);
 
     fs.writeFileSync(
       path.resolve(
@@ -255,6 +256,16 @@ export default {
   },
   handle: async ({ data }: { data: IDataProps }): Promise<void> => {
     const handle = container.resolve(Handle);
-    await handle.execute({ data });
+
+    // eslint-disable-next-line
+    await limit.limit(
+      async () => {
+        await handle.execute({ data });
+      },
+      {
+        limit: 10,
+        includeChildren: true,
+      },
+    );
   },
 };
