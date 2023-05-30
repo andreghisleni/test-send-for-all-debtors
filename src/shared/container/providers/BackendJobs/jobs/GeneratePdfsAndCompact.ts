@@ -263,7 +263,7 @@ export default {
         await handle.execute({ data });
       },
       {
-        limit: 10,
+        limit: 50,
         includeChildren: true,
       },
     );
