@@ -23,6 +23,11 @@ export class BullBackendJobsProvider implements IBackendJobsProvider {
           password: redisConfig.password,
         },
         limiter: job.limiter || undefined,
+        defaultJobOptions: {
+          removeOnComplete: {
+            age: 60 * 1, // 1 minute
+          },
+        },
       }),
       name: job.key,
       handle: job.handle,
@@ -44,5 +49,12 @@ export class BullBackendJobsProvider implements IBackendJobsProvider {
         console.log(err); // eslint-disable-line
       });
     });
+  }
+
+  runAny(name: string): any {
+    const queue = this.queues.find(q => q.name === name);
+
+    console.log('queue', queue?.bull.clients.length);
+    console.log('queue', queue?.bull.clients);
   }
 }

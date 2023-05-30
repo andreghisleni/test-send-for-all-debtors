@@ -1,5 +1,5 @@
-export const splitArray = (array: any[], perChunk: number) => {
-  return array.reduce((resultArray: any[][], item, index) => {
+export const splitArray = <T = any>(array: T[], perChunk: number) => {
+  return array.reduce((resultArray: T[][], item, index) => {
     const chunkIndex = Math.floor(index / perChunk);
 
     if (!resultArray[chunkIndex]) {

@@ -12,5 +12,9 @@ devedoresRoutes.get(
   '/export/all/:email',
   exportExtractDevedoresController.index,
 );
+devedoresRoutes.get(
+  '/export/all2/:email',
+  exportExtractDevedoresController.index1,
+);
 
 export { devedoresRoutes };

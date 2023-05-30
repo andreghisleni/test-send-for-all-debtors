@@ -1,5 +1,5 @@
-import aws from 'aws-sdk';
-import nodemailer, { Transporter } from 'nodemailer';
+import { SendEmailCommand, SESClient } from '@aws-sdk/client-ses';
+import { convert } from 'html-to-text';
 import { inject, injectable } from 'tsyringe';
 
 import mailConfig from '@config/mail';
@@ -10,18 +10,13 @@ import type { IMailProvider } from '../models/IMailProvider';
 
 @injectable()
 export class SESMailProvider implements IMailProvider {
-  private client: Transporter;
+  private client: SESClient;
 
   constructor(
     @inject('MailTemplateProvider')
     private mailTemplateProvider: IMailTemplateProvider,
   ) {
-    this.client = nodemailer.createTransport({
-      SES: new aws.SES({
-        apiVersion: '2010-12-01',
-        region: 'us-east-2',
-      }),
-    });
+    this.client = new SESClient({ region: 'us-east-2' });
   }
 
   public async sendMail({
@@ -31,17 +26,36 @@ export class SESMailProvider implements IMailProvider {
     templateData,
   }: ISendMailDTO): Promise<void> {
     const { name, email } = mailConfig.defaults.from;
-    await this.client.sendMail({
-      from: {
-        name: from?.name || name,
-        address: from?.email || email,
-      },
-      to: {
-        name: to.name,
-        address: to.email,
-      },
-      subject,
-      html: await this.mailTemplateProvider.parse(templateData),
-    });
+
+    const parsedHTML = await this.mailTemplateProvider.parse(templateData);
+
+    await this.client.send(
+      new SendEmailCommand({
+        Destination: {
+          ToAddresses: [`${to.name} <${to.email}>`],
+        },
+        Message: {
+          /* required */
+          Body: {
+            /* required */
+            Html: {
+              Charset: 'UTF-8',
+              Data: parsedHTML,
+            },
+            Text: {
+              Charset: 'UTF-8',
+              Data: convert(parsedHTML, {
+                wordwrap: 130,
+              }),
+            },
+          },
+          Subject: {
+            Charset: 'UTF-8',
+            Data: subject,
+          },
+        },
+        Source: `${from?.name || name} <${from?.email || email}>`,
+      }),
+    );
   }
 }

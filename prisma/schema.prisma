@@ -59,6 +59,7 @@ model clientes {
   datacadas  DateTime? @db.Date
   origem     Int?
   vendas     vendas[]
+  receber    receber[]
 }
 
 model compras {
@@ -223,12 +224,13 @@ model ramo_atividade {
 }
 
 model receber {
-  id_rec     Int      @default(autoincrement())
+  id_rec     Int       @default(autoincrement())
   venda      Int
-  data       DateTime @db.Date
-  valor      Float?   @db.Float
+  data       DateTime  @db.Date
+  valor      Float?    @db.Float
   codcliente Int?
-  vendas     vendas?  @relation(fields: [venda], references: [id_venda])
+  cliente    clientes? @relation(fields: [codcliente], references: [id])
+  vendas     vendas?   @relation(fields: [venda], references: [id_venda])
 
   @@id([id_rec, data, venda])
 }

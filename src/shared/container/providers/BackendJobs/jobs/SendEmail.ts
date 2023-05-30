@@ -1,6 +1,7 @@
 import { container, inject, injectable } from 'tsyringe';
 
 import { IMailProvider } from '../../MailProvider/models/IMailProvider';
+import { IJobDTO } from '../dtos/JobDTO';
 
 interface ITemplateVariables {
   [key: string]: string | number;
@@ -40,7 +41,7 @@ class Handle {
   }
 }
 
-export default {
+export const r: IJobDTO = {
   key: 'SendEmail',
   limiter: {
     max: 10,
@@ -51,3 +52,5 @@ export default {
     await handle.execute({ data });
   },
 };
+
+export default r;

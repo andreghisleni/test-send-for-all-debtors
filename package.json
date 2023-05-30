@@ -4,7 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build2": "tsup src --out-dir dist",
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
     "dev": "npm-run-all -p dev:*",
     "dev:server": "tsx watch src/shared/infra/http/server.ts",
@@ -40,6 +39,7 @@
     "@types/geoip-lite": "^1.4.1",
     "@types/hapi__joi": "^17.1.7",
     "@types/html-pdf-node": "^1.0.0",
+    "@types/html-to-text": "^9.0.0",
     "@types/ioredis": "^4.26.5",
     "@types/jsonwebtoken": "^8.5.4",
     "@types/mongodb": "^3.6.20",
@@ -68,7 +68,8 @@
     "yarn-upgrade-all": "^0.5.4"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.296.0",
+    "@aws-sdk/client-s3": "^3.328.0",
+    "@aws-sdk/client-ses": "^3.328.0",
     "@bull-board/api": "^5.1.2",
     "@bull-board/express": "^5.1.2",
     "@googlemaps/google-maps-services-js": "^3.3.10",
@@ -87,6 +88,7 @@
     "geoip-lite": "^1.4.2",
     "handlebars": "^4.7.7",
     "html-pdf-node": "^1.0.8",
+    "html-to-text": "^9.0.5",
     "ioredis": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "kafkajs": "^1.15.0",

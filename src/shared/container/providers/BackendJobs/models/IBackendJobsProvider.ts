@@ -10,4 +10,5 @@ export interface IBackendJobsProvider {
   queues: IQueue[];
   addQueue(name: string, data: unknown): Promise<Queue.Job<any>> | undefined;// eslint-disable-line
   processQueue(): void;
+  runAny(name: string): any;
 }
