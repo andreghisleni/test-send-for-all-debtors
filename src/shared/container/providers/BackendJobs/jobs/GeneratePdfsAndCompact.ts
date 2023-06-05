@@ -175,6 +175,7 @@ class Handle {
 
     const browser = await puppeteer.launch({
       headless: 'new',
+      timeout: 120000,
     });
 
     const perChunk = 3; // items per chunk
