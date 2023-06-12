@@ -30,6 +30,8 @@ const envSchema = z.object({
   REDIS_PASS: z.string().optional(),
 
   GOOGLE_MAPS_API_KEY: z.string(),
+
+  WKHTMLTOPDF_URL: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);

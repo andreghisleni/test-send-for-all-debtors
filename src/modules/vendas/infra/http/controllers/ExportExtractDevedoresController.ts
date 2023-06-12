@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { ExportExtractAllToToPdfService2 } from '@modules/vendas/services/ExportExtractAllToToPdfService2';
+import { ExportExtractAllToToPdfService2 } from '@modules/vendas/services/ExportExtractAllToToPdfService3';
 import { SendMailTestService } from '@modules/vendas/services/SendMailTestService';
 
 export class ExportExtractDevedoresController {

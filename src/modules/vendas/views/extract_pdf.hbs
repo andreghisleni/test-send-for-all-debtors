@@ -34,6 +34,12 @@
     ul {
       list-style: none;
       padding: 0;
+      width: 400px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      width: 400px;
     }
 
     table {
@@ -68,30 +74,47 @@
 
     .red {
       color: red;
-      background: #000;
+      border: 2px solid blue;
     }
 
-    header {
+    .header {
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
-      align-items: center;
+
     }
 
     img.logo {
       width: 200px;
     }
+
+    td.right {
+      text-align: right;
+    }
+
+    table.no-border td {
+      border: none;
+    }
   </style>
 </head>
 
 <body class="padding">
-  <header>
-    <ul>
-      <li> <strong> Número da venda: </strong>{{id_venda}} </li>
-      <li> <strong> Cliente: </strong>{{nome_cliente}} </li>
-      <li> <strong> Data: </strong> {{data_venda}} </li>
-    </ul>
-    <img class="logo" src="{{logo}}" alt="Logo Marcon numismatica">
-  </header>
+  <div class="header">
+    <table class="no-border">
+      <tr>
+        <td>
+          <ul>
+            <li> <strong> Número da venda: </strong>{{id_venda}} </li>
+            <li> <strong> Cliente: </strong>{{nome_cliente}} </li>
+            <li> <strong> Data: </strong> {{data_venda}} </li>
+          </ul>
+        </td>
+        <td class="right">
+          <img class="logo" src="{{logo}}" alt="Logo Marcon numismatica">
+        </td>
+      </tr>
+    </table>
+  </div>
 
 
 

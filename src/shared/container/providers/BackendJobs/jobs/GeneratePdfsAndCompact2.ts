@@ -1,16 +1,16 @@
 import { env } from '@env';
 import { Prisma, vendas } from '@prisma/client';
 import { formatValueToBRL } from '@utils/formatValueToBRL';
-import { splitArray } from '@utils/splitArray';
 import AdmZip from 'adm-zip';
-import { format, parseISO } from 'date-fns';
 import fs from 'node:fs';
 import path from 'node:path';
-import puppeteer, { Browser } from 'puppeteer';
 import { container, inject, injectable } from 'tsyringe';
 
+import { formatDateToBR } from '../../../../../utils/formatDate';
+import { formatDateToUS } from '../../../../../utils/formatDate';
+import { ICacheProvider } from '../../CacheProvider/models/ICacheProvider';
+import { IHtmlToPdfProvider } from '../../HtmlToPdfProvider/models/IHtmlToPdfProvider';
 import { IMailProvider } from '../../MailProvider/models/IMailProvider';
-import { IMailTemplateProvider } from '../../MailTemplateProvider/models/IMailTemplateProvider';
 import { IStorageProvider } from '../../StorageProvider/models/IStorageProvider';
 
 type IVenda = vendas &
@@ -32,60 +32,55 @@ type IVenda = vendas &
   }> & { total: number; totalRecebido: number };
 
 interface IDataProps {
-  vendas: IVenda[];
   extractPdfTemplate: string;
 
   email: string;
   sendLinkDownloadTemplate: string;
+
+  cachePrefix: string;
 }
 
 @injectable()
 class Handle {
   constructor(
-    @inject('MailTemplateProvider')
-    private mailTemplateProvider: IMailTemplateProvider,
-
     @inject('StorageProvider')
     private storageProvider: IStorageProvider,
 
     @inject('MailProvider')
     private mailProvider: IMailProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
+
+    @inject('HtmlToPdfProvider')
+    private htmlToPdfProvider: IHtmlToPdfProvider,
   ) { } // eslint-disable-line
 
 
   private async generatePdf(
-    browser: Browser,
     venda: IVenda,
     folderName: string,
     extractPdfTemplate: string,
   ): Promise<string> {
-    console.log('Starting generate pdf for venda: ', venda.id_venda);
+    const vcn = venda.clientes?.nome || '';
 
-    const fDate = (d: Date | null) => {
-      if (!d) return '';
+    const name = `${venda.id_venda} - ${vcn} - ${formatDateToUS(venda.data)}`
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[&@\/\\#,+()$~%.'":*?<>{}]/g, ''); // eslint-disable-line no-useless-escape
 
-      return d instanceof Date
-        ? format(d, 'dd/MM/yyyy')
-        : format(parseISO(d), 'dd/MM/yyyy');
-    };
-    const fDate2 = (d: Date | null) => {
-      if (!d) return '';
+    const pathFile = path.resolve(folderName, `${name}.pdf`);
 
-      return d instanceof Date
-        ? format(d, 'yyyy-MM-dd')
-        : format(parseISO(d), 'yyyy-MM-dd');
-    };
-
-    const htmlToPdf = await this.mailTemplateProvider.parse({
+    await this.htmlToPdfProvider.generate(pathFile, {
       file: extractPdfTemplate,
       variables: {
-        logo: 'http://localhost:3333/public/logo-marcon.png',
+        logo: 'http://host.docker.internal:3333/public/logo-marcon.png',
         id_venda: venda.id_venda,
         nome_cliente: venda.clientes?.nome || '',
-        data_venda: fDate(venda.data),
+        data_venda: formatDateToBR(venda.data),
         produtos: venda.produtos.map(produto => ({
           nome: produto.product?.nome || '',
-          data: fDate(produto.datasaida),
+          data: formatDateToBR(produto.datasaida),
           code: produto.product?.codigo || '',
           ano: produto.product?.ano || '',
           origem: produto.product?.country?.nomepais || '',
@@ -100,54 +95,14 @@ class Handle {
         ),
         valor_total: formatValueToBRL(venda.total || 0),
         pagamentos: venda.receber.map(pagamento => ({
-          data: fDate(pagamento.data),
+          data: formatDateToBR(pagamento.data),
           valor: formatValueToBRL(pagamento.valor || 0),
           tipo: venda.formapagar?.nomepagamento || '',
         })),
         saldo: formatValueToBRL(venda.totalRecebido - venda.total),
-        img_pix: 'http://localhost:3333/public/pix.png',
+        img_pix: 'http://host.docker.internal:3333/public/pix.png',
       },
     });
-
-    const page = await browser.newPage();
-
-    await page.setContent(htmlToPdf);
-
-    const div_selector_to_remove = '.padding';
-    await page.evaluate(sel => {
-      const elements = document.querySelectorAll(sel);
-      // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < elements.length; i++) {
-        elements[i]?.classList?.remove('padding');
-      }
-    }, div_selector_to_remove);
-
-    const name = `${venda.id_venda} - ${venda.clientes?.nome || ''} - ${fDate2(
-      venda.data,
-    )}`
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[&@\/\\#,+()$~%.'":*?<>{}]/g, ''); // eslint-disable-line no-useless-escape
-
-    const pathFile = path.resolve(folderName, `${name}.pdf`);
-
-    await page.pdf({
-      path: pathFile,
-      printBackground: true,
-      format: 'A4',
-      displayHeaderFooter: true,
-      margin: {
-        top: '1.5cm',
-        right: '1.5cm',
-        bottom: '2.5cm',
-        left: '1.5cm',
-      },
-      headerTemplate: '<div />',
-      footerTemplate:
-        '<div style="font-size: 11px !important; overflow: auto; margin-left: 1.5cm; margin-right: 1.5cm; color: ghostwhite;">Página <span class="pageNumber"></span> de <span class="totalPages"></span></div>',
-    });
-
-    await page.close();
 
     console.log('Pdf generated for venda: ', venda.id_venda);
 
@@ -155,7 +110,7 @@ class Handle {
   }
 
   public async execute({
-    data: { vendas, extractPdfTemplate, email, sendLinkDownloadTemplate },
+    data: { cachePrefix, extractPdfTemplate, email, sendLinkDownloadTemplate },
   }: {
     data: IDataProps;
   }): Promise<void> {
@@ -177,14 +132,18 @@ class Handle {
       fs.mkdirSync(folderName);
     }
 
-    const browser = await puppeteer.launch({
-      headless: 'new',
-      timeout: 120000,
-    });
+    const vendas = await this.cacheProvider.recover<IVenda[]>(
+      cachePrefix,
+      true,
+    );
 
-    const perChunk = 3; // items per chunk
+    if (!vendas) {
+      throw new Error('Vendas not found');
+    }
 
-    const result = splitArray(vendas, perChunk);
+    // const perChunk = 100; // items per chunk
+
+    // const result = splitArray(vendas, perChunk);
 
     fs.writeFileSync(
       path.resolve(
@@ -202,16 +161,14 @@ class Handle {
     );
 
     // eslint-disable-next-line no-restricted-syntax
-    for (const vendasChunk of result) {
-      // eslint-disable-next-line no-await-in-loop
-      await Promise.all(
-        vendasChunk.map(async venda =>
-          this.generatePdf(browser, venda, folderName, extractPdfTemplate),
-        ),
-      );
-    }
-
-    await browser.close();
+    // for (const vendasChunk of result) {
+    // eslint-disable-next-line no-await-in-loop
+    await Promise.all(
+      vendas.map(async venda =>
+        this.generatePdf(venda, folderName, extractPdfTemplate),
+      ),
+    );
+    // }
 
     const zip = new AdmZip();
 
@@ -230,11 +187,13 @@ class Handle {
     zip.addLocalFolder(folderName);
     zip.writeZip(folderZipName);
 
-    fs.rmdirSync(folderName, { recursive: true });
-
     const file = await this.storageProvider.saveFile(`${fName}.zip`, true);
 
     console.log(`${env.APP_API_URL}/downloads/${file}`);
+
+    fs.rmdirSync(folderName, { recursive: true });
+
+    await this.cacheProvider.invalidate(cachePrefix);
 
     await this.mailProvider.sendMail({
       to: {
@@ -253,7 +212,7 @@ class Handle {
 }
 
 export default {
-  key: 'GeneratePdfsAndCompact',
+  key: 'GeneratePdfsAndCompact2',
   limiter: {
     max: 1,
     duration: 5000,

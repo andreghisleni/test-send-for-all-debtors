@@ -7,7 +7,7 @@ import { inject, injectable } from 'tsyringe';
 
 import type { IMailProvider } from '@shared/container/providers/MailProvider/models/IMailProvider';
 import type { IMailTemplateProvider } from '@shared/container/providers/MailTemplateProvider/models/IMailTemplateProvider';
-import AppError from '@shared/errors/AppError';
+import { AppError } from '@shared/errors/AppError';
 import { prisma } from '@shared/infra/prisma';
 
 interface IRequest {

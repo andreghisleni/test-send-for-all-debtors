@@ -6,3 +6,4 @@ import './GeocodeProvider';
 import './CacheProvider';
 import './ExcelGeneratorProvider';
 import './BackendJobs';
+import './HtmlToPdfProvider';

@@ -10,7 +10,7 @@ import socketIo from 'socket.io';
 
 import { uploadConfig } from '@config/upload';
 
-import AppError from '@shared/errors/AppError';
+import { AppError } from '@shared/errors/AppError';
 
 import { rateLimiter } from './middlewares/rateLimiter';
 import { routes } from './routes';
@@ -71,6 +71,7 @@ app.use((err: Error, req: Request, res: Response, _: NextFunction) => {
       .json({ status: 'error', message: err.message });
   }
   console.error(err); // eslint-disable-line
+
   return res
     .status(500)
     .json({ status: 'error', message: 'Internal server error' });
