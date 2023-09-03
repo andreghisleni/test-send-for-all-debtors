@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import { ExportExtractAllToToPdfService2 } from '@modules/vendas/services/ExportExtractAllToToPdfService3';
-import { SendMailTestService } from '@modules/vendas/services/SendMailTestService';
+
+import { ExportExtractAllToToPdfService4 } from '../../../services/ExportExtractAllToToPdfService4';
 
 export class ExportExtractDevedoresController {
   async index(req: Request, res: Response): Promise<void> {
@@ -24,7 +25,9 @@ export class ExportExtractDevedoresController {
   async index1(req: Request, res: Response): Promise<void> {
     const { email } = req.params;
 
-    const exportExtractAllToToPdf = container.resolve(SendMailTestService);
+    const exportExtractAllToToPdf = container.resolve(
+      ExportExtractAllToToPdfService4,
+    );
 
     await exportExtractAllToToPdf.execute({
       email,

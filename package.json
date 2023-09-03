@@ -73,7 +73,7 @@
     "@bull-board/api": "^5.1.2",
     "@bull-board/express": "^5.1.2",
     "@googlemaps/google-maps-services-js": "^3.3.10",
-    "@prisma/client": "^4.11.0",
+    "@prisma/client": "^5.2.0",
     "adm-zip": "^0.5.10",
     "aws-sdk": "^2.946.0",
     "axios": "^1.4.0",

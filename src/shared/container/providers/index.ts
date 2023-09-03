@@ -7,3 +7,4 @@ import './CacheProvider';
 import './ExcelGeneratorProvider';
 import './BackendJobs';
 import './HtmlToPdfProvider';
+import './NavigatorProvider';
