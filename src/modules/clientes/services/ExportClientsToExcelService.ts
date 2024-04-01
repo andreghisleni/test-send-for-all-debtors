@@ -7,6 +7,7 @@ import { uploadConfig } from '@config/upload';
 
 import type { IExcelGeneratorProvider } from '@shared/container/providers/ExcelGeneratorProvider/models/IExcelGeneratorProvider';
 import { prisma } from '@shared/infra/prisma';
+import { format } from 'date-fns';
 
 // interface IRequest {
 // }
@@ -76,6 +77,7 @@ export class ExportClientsToExcelService {
             0,
           ),
         ),
+        total_venda: vendas.length,
       }),
     );
 
@@ -93,6 +95,9 @@ export class ExportClientsToExcelService {
               Cidade: clients.cidade,
               Endereço: clients.endereco,
               Total: clients.total,
+              'Total de Vendas': clients.total_venda,
+              'Criado em': clients.datacadas ? format(new Date(clients.datacadas), 'DD-MM-YYYY') : '',
+              'Origem': clients.origem || '',
             })),
           ],
         },
