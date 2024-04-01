@@ -1,4 +1,4 @@
-import { clientes, Prisma } from '@prisma/client';
+import { clientes, Prisma, taborigem } from '@prisma/client';
 import { formatValueToBRL } from '@utils/formatValueToBRL';
 import path from 'node:path';
 import { inject, injectable } from 'tsyringe';
@@ -37,6 +37,7 @@ type ICliente = clientes & {
       qtde: number;
     }[];
   }[];
+  Origem?: taborigem;
 };
 
 @injectable()
@@ -54,6 +55,7 @@ export class ExportClientsToExcelService {
             produtos: true,
           },
         },
+        Origem: true
       },
       orderBy: {
         nome: 'asc',
@@ -97,7 +99,7 @@ export class ExportClientsToExcelService {
               Total: clients.total,
               'Total de Vendas': clients.total_venda,
               'Criado em': clients.datacadas ? format(new Date(clients.datacadas), 'dd-MM-yyyy') : '',
-              'Origem': clients.origem || '',
+              'Origem': clients.Origem?.nomeorigem || '',
             })),
           ],
         },

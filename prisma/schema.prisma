@@ -42,24 +42,25 @@ model cidades {
 }
 
 model clientes {
-  id         Int       @id @default(autoincrement())
-  nome       String    @unique @db.VarChar(50)
-  cpf        String?   @db.VarChar(18)
-  fone       String    @db.VarChar(15)
-  celular    String    @db.VarChar(15)
-  email      String    @db.VarChar(40)
-  endereco   String    @db.VarChar(70)
-  cidade     String    @db.VarChar(40)
-  cep        String    @db.VarChar(9)
-  uf         String    @db.VarChar(2)
-  bairro     String    @db.VarChar(50)
-  observacao String    @db.VarChar(200)
-  valorfrete Decimal?  @db.Decimal(10, 2)
+  id         Int        @id @default(autoincrement())
+  nome       String     @unique @db.VarChar(50)
+  cpf        String?    @db.VarChar(18)
+  fone       String     @db.VarChar(15)
+  celular    String     @db.VarChar(15)
+  email      String     @db.VarChar(40)
+  endereco   String     @db.VarChar(70)
+  cidade     String     @db.VarChar(40)
+  cep        String     @db.VarChar(9)
+  uf         String     @db.VarChar(2)
+  bairro     String     @db.VarChar(50)
+  observacao String     @db.VarChar(200)
+  valorfrete Decimal?   @db.Decimal(10, 2)
   cliente    Int
-  datacadas  DateTime? @db.Date
+  datacadas  DateTime?  @db.Date
   origem     Int?
   vendas     vendas[]
   receber    receber[]
+  Origem     taborigem? @relation(fields: [origem], references: [id_orig])
 }
 
 model compras {
@@ -259,9 +260,10 @@ model sacola_copy1 {
 }
 
 model taborigem {
-  id_orig    Int     @id @default(autoincrement())
-  nomeorigem String? @db.VarChar(50)
+  id_orig    Int        @id @default(autoincrement())
+  nomeorigem String?    @db.VarChar(50)
   padrao     Int?
+  clientes   clientes[]
 }
 
 model tabtitulos {
