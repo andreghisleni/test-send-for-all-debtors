@@ -96,7 +96,7 @@ export class ExportClientsToExcelService {
               Endereço: clients.endereco,
               Total: clients.total,
               'Total de Vendas': clients.total_venda,
-              'Criado em': clients.datacadas ? format(new Date(clients.datacadas), 'DD-MM-YYYY') : '',
+              'Criado em': clients.datacadas ? format(new Date(clients.datacadas), 'dd-MM-YYYY') : '',
               'Origem': clients.origem || '',
             })),
           ],
