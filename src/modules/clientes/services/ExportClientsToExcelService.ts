@@ -1,5 +1,6 @@
 import { clientes, Prisma, taborigem } from '@prisma/client';
 import { formatValueToBRL } from '@utils/formatValueToBRL';
+import { format } from 'date-fns';
 import path from 'node:path';
 import { inject, injectable } from 'tsyringe';
 
@@ -7,7 +8,6 @@ import { uploadConfig } from '@config/upload';
 
 import type { IExcelGeneratorProvider } from '@shared/container/providers/ExcelGeneratorProvider/models/IExcelGeneratorProvider';
 import { prisma } from '@shared/infra/prisma';
-import { format } from 'date-fns';
 
 // interface IRequest {
 // }
@@ -55,33 +55,19 @@ export class ExportClientsToExcelService {
             produtos: true,
           },
         },
-        Origem: true
+        Origem: true,
       },
       orderBy: {
         nome: 'asc',
       },
     });
 
-    const parsedClients = (clients as ICliente[]).map(
-      ({ vendas, ...client }) => ({
-        ...client,
+    const parsedClients = (clients as ICliente[]).map(({ vendas, ...client }) => ({
+      ...client,
 
-        total: formatValueToBRL(
-          vendas.reduce(
-            (acc, curr) =>
-              acc +
-              curr.produtos.reduce(
-                (acc, curr) => acc + (curr.valor || 0) * (curr.qtde || 0),
-                0,
-              ) +
-              (curr.frete || 0) -
-              (curr.desconto || 0),
-            0,
-          ),
-        ),
-        total_venda: vendas.length,
-      }),
-    );
+      total: formatValueToBRL(vendas.reduce((acc, curr) => acc + curr.produtos.reduce((acc, curr) => acc + (curr.valor || 0) * (curr.qtde || 0), 0) + (curr.frete || 0) - (curr.desconto || 0), 0)),
+      total_venda: vendas.length,
+    }));
 
     const fileName = await this.excelGeneratorProvider.generate({
       fileName: `${Date.now()}-export-clients.xlsx`,
@@ -99,7 +85,7 @@ export class ExportClientsToExcelService {
               Total: clients.total,
               'Total de Vendas': clients.total_venda,
               'Criado em': clients.datacadas ? format(new Date(clients.datacadas), 'dd-MM-yyyy') : '',
-              'Origem': clients.Origem?.nomeorigem || '',
+              Origem: clients.Origem?.nomeorigem || '',
             })),
           ],
         },
