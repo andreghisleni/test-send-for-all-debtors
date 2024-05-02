@@ -3,6 +3,8 @@ import redis from 'redis';
 
 import { redisConfig } from '@config/redis';
 
+import { prisma } from '@shared/infra/prisma';
+
 import { routesClients } from '@modules/clientes/infra/http/routes';
 import { routesVendas } from '@modules/vendas/infra/http/routes';
 
@@ -19,6 +21,15 @@ const redisClient = redis.createClient({
 
 routes.get('/clear-redis', async (req, res) => {
   return res.json({ ok: redisClient.flushall() });
+});
+
+routes.get('/get/all/clients', async (req, res) => {
+  const clients = await prisma.clientes.findMany({
+    include: {
+      Origem: true,
+    },
+  });
+  return res.json({ clients });
 });
 
 export { routes };
