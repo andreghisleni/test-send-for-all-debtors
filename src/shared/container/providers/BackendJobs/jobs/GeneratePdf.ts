@@ -56,26 +56,18 @@ class Handle {
   ) { } // eslint-disable-line
 
 
-  private async generatePdf(
-    venda: IVenda,
-    folderName: string,
-    extractPdfTemplate: string,
-  ): Promise<string> {
+  private async generatePdf(venda: IVenda, folderName: string, extractPdfTemplate: string): Promise<string> {
     console.log('Starting generate pdf for venda: ', venda.id_venda);
 
     const fDate = (d: Date | null) => {
       if (!d) return '';
 
-      return d instanceof Date
-        ? format(d, 'dd/MM/yyyy')
-        : format(parseISO(d), 'dd/MM/yyyy');
+      return d instanceof Date ? format(d, 'dd/MM/yyyy') : format(parseISO(d), 'dd/MM/yyyy');
     };
     const fDate2 = (d: Date | null) => {
       if (!d) return '';
 
-      return d instanceof Date
-        ? format(d, 'yyyy-MM-dd')
-        : format(parseISO(d), 'yyyy-MM-dd');
+      return d instanceof Date ? format(d, 'yyyy-MM-dd') : format(parseISO(d), 'yyyy-MM-dd');
     };
 
     const html = await this.mailTemplateProvider.parse({
@@ -96,10 +88,7 @@ class Handle {
         })),
         valor_frete: formatValueToBRL(venda.frete || 0),
         valor_desconto: formatValueToBRL(venda.desconto || 0),
-        qtd_total: venda.produtos.reduce(
-          (acc, curr) => acc + (curr.qtde || 0),
-          0,
-        ),
+        qtd_total: venda.produtos.reduce((acc, curr) => acc + (curr.qtde || 0), 0),
         valor_total: formatValueToBRL(venda.total || 0),
         pagamentos: venda.receber.map(pagamento => ({
           data: fDate(pagamento.data),
@@ -112,9 +101,7 @@ class Handle {
     });
     const page = await this.navigatorProvider.newPage(html);
 
-    const name = `${venda.id_venda} - ${venda.clientes?.nome || ''} - ${fDate2(
-      venda.data,
-    )}`
+    const name = `${venda.id_venda} - ${venda.clientes?.nome || ''} - ${fDate2(venda.data)}`
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[&@\/\\#,+()$~%.'":*?<>{}]/g, ''); // eslint-disable-line no-useless-escape
@@ -130,25 +117,12 @@ class Handle {
     return pathFile;
   }
 
-  public async execute({
-    data: {
-      cachePrefix,
-      folderPath,
-      folderName,
-      venda,
-      extractPdfTemplate,
-      email,
-      sendLinkDownloadTemplate,
-    },
-  }: {
-    data: IDataProps;
-  }): Promise<void> {
+  public async execute({ data: { cachePrefix, folderPath, folderName, venda, extractPdfTemplate, email, sendLinkDownloadTemplate } }: { data: IDataProps }): Promise<void> {
     await this.generatePdf(venda, folderPath, extractPdfTemplate);
 
     console.log(await this.cacheProvider.recover<number>(cachePrefix, true));
 
-    const countTotalRest =
-      ((await this.cacheProvider.recover<number>(cachePrefix, true)) || 0) - 1;
+    const countTotalRest = ((await this.cacheProvider.recover<number>(cachePrefix, true)) || 0) - 1;
 
     await this.cacheProvider.save(cachePrefix, countTotalRest, true);
 

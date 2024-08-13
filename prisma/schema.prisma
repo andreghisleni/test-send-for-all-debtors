@@ -42,25 +42,30 @@ model cidades {
 }
 
 model clientes {
-  id         Int        @id @default(autoincrement())
-  nome       String     @unique @db.VarChar(50)
-  cpf        String?    @db.VarChar(18)
-  fone       String     @db.VarChar(15)
-  celular    String     @db.VarChar(15)
-  email      String     @db.VarChar(40)
-  endereco   String     @db.VarChar(70)
-  cidade     String     @db.VarChar(40)
-  cep        String     @db.VarChar(9)
-  uf         String     @db.VarChar(2)
-  bairro     String     @db.VarChar(50)
-  observacao String     @db.VarChar(200)
-  valorfrete Decimal?   @db.Decimal(10, 2)
-  cliente    Int
-  datacadas  DateTime?  @db.Date
-  origem     Int?
-  vendas     vendas[]
-  receber    receber[]
-  Origem     taborigem? @relation(fields: [origem], references: [id_orig])
+  id          Int       @unique @default(autoincrement())
+  nome        String    @db.VarChar(50)
+  cpf         String?   @db.VarChar(18)
+  fone        String    @db.VarChar(15)
+  celular     String    @db.VarChar(15)
+  email       String    @db.VarChar(40)
+  endereco    String    @db.VarChar(70)
+  cidade      String    @db.VarChar(40)
+  cep         String    @db.VarChar(9)
+  uf          String    @db.VarChar(2)
+  bairro      String    @db.VarChar(50)
+  observacao  String    @db.VarChar(200)
+  valorfrete  Decimal?  @db.Decimal(10, 2)
+  cliente     Int
+  datacadas   DateTime? @db.Date
+  origem      Int?
+  forma_envio Int?
+
+  vendas           vendas[]
+  receber          receber[]
+  Origem           taborigem?         @relation(fields: [origem], references: [id_orig])
+  coletivas_sacola coletivas_sacola[]
+
+  @@id([id, nome])
 }
 
 model compras {
@@ -189,9 +194,10 @@ model moedas {
   comemorativa String? @db.VarChar(50)
   codcliente   Int
 
-  pais    Int?
-  country pais?    @relation(fields: [pais], references: [id_pais])
-  sacola  sacola[]
+  pais             Int?
+  country          pais?              @relation(fields: [pais], references: [id_pais])
+  sacola           sacola[]
+  coletivas_sacola coletivas_sacola[]
 }
 
 model pagar {
@@ -225,13 +231,14 @@ model ramo_atividade {
 }
 
 model receber {
-  id_rec     Int       @default(autoincrement())
-  venda      Int
-  data       DateTime  @db.Date
-  valor      Float?    @db.Float
-  codcliente Int?
-  cliente    clientes? @relation(fields: [codcliente], references: [id])
-  vendas     vendas?   @relation(fields: [venda], references: [id_venda])
+  id_rec         Int       @default(autoincrement())
+  venda          Int
+  data           DateTime  @db.Date
+  valor          Float?    @db.Float
+  codcliente     Int?
+  formapagamento Int?
+  cliente        clientes? @relation(fields: [codcliente], references: [id])
+  vendas         vendas?   @relation(fields: [venda], references: [id_venda])
 
   @@id([id_rec, data, venda])
 }
@@ -281,6 +288,8 @@ model tabusers {
   situacao Int
   telefone String? @db.VarChar(15)
   cliente  Int
+  nroip    String? @db.VarChar(14)
+  adm      Int?
 }
 
 model tabvendedores {
@@ -303,18 +312,119 @@ model vendas {
   formapagar formapagar? @relation(references: [id_cond], fields: [formapagto])
   clientes   clientes?   @relation(fields: [cliente], references: [id])
 
-  produtos sacola[]
-  receber  receber[]
+  produtos         sacola[]
+  receber          receber[]
+  coletivas_sacola coletivas_sacola[]
 }
 
-model vendas_copy1 {
-  id_venda   Int       @id @default(autoincrement())
-  cliente    Int
-  data       DateTime? @db.Date
-  formapagto Int?
-  obs        String?   @db.VarChar(255)
-  frete      Float?    @db.Float
-  desconto   Float?    @db.Float
-  status     Int?
-  codcliente Int
+model coletivas {
+  numero           Int                @id @default(autoincrement())
+  data             DateTime?          @db.Date
+  codvendedor      Int?
+  situacao         Int?
+  coletivas_sacola coletivas_sacola[]
+}
+
+model coletivas_sacola {
+  id_coletivas Int     @id @default(autoincrement())
+  numero       Int? // id coletivas
+  moeda        Int?
+  codcliente   Int?
+  qtde         Float?  @db.Float
+  valor        Float?  @db.Float
+  nrovenda     Int?
+  obs          String? @db.VarChar(30)
+
+  coin     moedas?    @relation(fields: [moeda], references: [id])
+  client   clientes?  @relation(fields: [codcliente], references: [id])
+  venda    vendas?    @relation(fields: [nrovenda], references: [id_venda])
+  coletiva coletivas? @relation(fields: [numero], references: [numero])
+}
+
+model formas_envio {
+  id_forma  Int     @id @default(autoincrement())
+  nomeforma String? @db.VarChar(50)
+}
+
+model log {
+  hora    DateTime? @db.DateTime(0)
+  ip      String?   @db.VarChar(15)
+  usuario Int?
+  modulo  Int?
+  id      Int       @id @default(autoincrement())
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model logcli {
+  cliente Int?
+  usuario Int?
+  modulo  Int?
+  hora    DateTime? @db.DateTime(0)
+  ip      String?   @db.VarChar(15)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model logcoletivas {
+  venda   Int?
+  usuario Int?
+  modulo  Int?
+  hora    DateTime? @db.DateTime(0)
+  ip      String?   @db.VarChar(15)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model logdemandas {
+  venda   Int?
+  usuario Int?
+  modulo  Int?
+  hora    DateTime? @db.DateTime(0)
+  ip      String?   @db.VarChar(15)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model logmoedas {
+  moeda   Int?
+  usuario Int?
+  modulo  Int?
+  hora    DateTime? @db.DateTime(0)
+  ip      String?   @db.VarChar(15)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model logvendas {
+  venda   Int?
+  usuario Int?
+  modulo  Int?
+  hora    DateTime? @db.DateTime(0)
+  ip      String?   @db.VarChar(15)
+
+  @@ignore
+}
+
+model modulos {
+  codigo    Int     @id @default(autoincrement())
+  descricao String? @db.VarChar(100)
+}
+
+model rastreamento {
+  id_ras Int       @id @default(autoincrement())
+  data   DateTime? @db.Date
+  venda  Int?
+  nroras String?   @db.VarChar(20)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model tabperm {
+  coduser Int?
+  modulo  Int?
+
+  @@ignore
 }

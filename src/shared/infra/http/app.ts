@@ -7,11 +7,13 @@ import 'express-async-errors';
 import { createServer } from 'http';
 import path from 'node:path';
 import socketIo from 'socket.io';
+import { container } from 'tsyringe';
 
 import { uploadConfig } from '@config/upload';
 
 import { AppError } from '@shared/errors/AppError';
 
+import { Navigator } from '../backendJobs/navigator';
 import { rateLimiter } from './middlewares/rateLimiter';
 import { routes } from './routes';
 
@@ -41,6 +43,8 @@ io.on('connection', socket => {
 
 io.on('error', err => console.log(err));
 
+const puppeteer = container.resolve(Navigator);
+
 app.use(cors());
 app.use(express.json());
 app.use(
@@ -55,6 +59,7 @@ app.set('trust proxy', true);
     req.io = io;
     return next();
   });
+  await puppeteer.newBrowser();
 })();
 app.use('/files', express.static(uploadConfig.uploadsFolder));
 app.use('/downloads', express.static(uploadConfig.downloadsFolder));
@@ -66,15 +71,11 @@ app.use(errors());
 
 app.use((err: Error, req: Request, res: Response, _: NextFunction) => {
   if (err instanceof AppError) {
-    return res
-      .status(err.statusCode)
-      .json({ status: 'error', message: err.message });
+    return res.status(err.statusCode).json({ status: 'error', message: err.message });
   }
   console.error(err); // eslint-disable-line
 
-  return res
-    .status(500)
-    .json({ status: 'error', message: 'Internal server error' });
+  return res.status(500).json({ status: 'error', message: 'Internal server error' });
 });
 
 export { server };

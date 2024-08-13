@@ -33,11 +33,13 @@ export class PuppeteerNavigatorProvider implements INavigatorProvider {
     return page;
   }
 
-  public async savePdf(page: Page, path: string): Promise<void> {
-    await page.pdf({
+  public async savePdf(page: Page, path?: string): Promise<Buffer> {
+    return page.pdf({
       path,
       printBackground: true,
-      format: 'A4',
+      // format: 'A4',
+      width: '105mm',
+      height: '22mm',
       displayHeaderFooter: true,
       margin: {
         top: '0',
