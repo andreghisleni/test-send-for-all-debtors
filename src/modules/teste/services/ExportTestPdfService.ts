@@ -1,4 +1,5 @@
 import { formatValueToBRL } from '@utils/formatValueToBRL';
+import { formatInTimeZone } from 'date-fns-tz';
 import { ptBR } from 'date-fns/locale/pt-BR';
 import path from 'node:path';
 import { inject, injectable } from 'tsyringe';
@@ -8,7 +9,6 @@ import { uploadConfig } from '@config/upload';
 import { IMailTemplateProvider } from '@shared/container/providers/MailTemplateProvider/models/IMailTemplateProvider';
 import { INavigatorProvider } from '@shared/container/providers/NavigatorProvider/models/INavigatorProvider';
 import { prisma } from '@shared/infra/prisma';
-import { formatInTimeZone } from 'date-fns-tz';
 
 type IResponse = {
   file: string;
@@ -18,7 +18,7 @@ type IResponse = {
 
 type IRequest = {
   number: number;
-}
+};
 
 @injectable()
 export class ExportTestPdfService {
@@ -72,11 +72,16 @@ export class ExportTestPdfService {
           obs: item.venda?.obs,
           name: item.client?.nome,
           coin: item.coin?.codigo,
-          date: formatInTimeZone(new Date(item.coletiva?.data || ''), 'America/Sao_Paulo', 'dd/MM/yyyy', {
-            locale: ptBR,
-          }),
+          date: formatInTimeZone(
+            new Date(item.coletiva?.data || ''),
+            'America/Sao_Paulo',
+            'dd/MM/yyyy',
+            {
+              locale: ptBR,
+            },
+          ),
           qtde: item.qtde,
-          value: formatValueToBRL((item?.valor || 0)),
+          value: formatValueToBRL(item?.valor || 0),
         })),
       },
     });
@@ -85,9 +90,22 @@ export class ExportTestPdfService {
 
     const fileName = `${Date.now()}-id-${number}-export-postites.pdf`;
 
-    const filePath = path.resolve(__dirname, '..', '..', '..', '..', 'tmp', 'uploads', fileName);
+    const filePath = path.resolve(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      '..',
+      'tmp',
+      'uploads',
+      fileName,
+    );
 
-    const buffer = await this.navigatorProvider.savePdf(page, filePath);
+    const buffer = await this.navigatorProvider.savePdf(
+      page,
+      filePath,
+      'postite',
+    );
 
     await this.navigatorProvider.closePage(page);
 

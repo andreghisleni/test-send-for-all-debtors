@@ -33,13 +33,17 @@ export class PuppeteerNavigatorProvider implements INavigatorProvider {
     return page;
   }
 
-  public async savePdf(page: Page, path?: string): Promise<Buffer> {
+  public async savePdf(
+    page: Page,
+    path?: string,
+    format: 'postite' | 'A4' = 'A4',
+  ): Promise<Buffer> {
+    const props = format === 'postite' ? { width: '105mm', height: '22mm', } : format === 'A4' ? { format: 'A4' } : { format: 'A4' }; // eslint-disable-line
+
     return page.pdf({
       path,
       printBackground: true,
-      // format: 'A4',
-      width: '105mm',
-      height: '22mm',
+      ...(props as any),
       displayHeaderFooter: true,
       margin: {
         top: '0',
