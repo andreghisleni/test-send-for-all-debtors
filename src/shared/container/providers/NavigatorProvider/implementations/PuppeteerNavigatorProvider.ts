@@ -13,6 +13,7 @@ export class PuppeteerNavigatorProvider implements INavigatorProvider {
       this.browser = await puppeteer.launch({
         headless: 'new',
         executablePath: env.CHROME_PATH,
+        args: ['--no-sandbox'],
       });
     }
   }
