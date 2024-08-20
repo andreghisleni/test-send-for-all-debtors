@@ -32,6 +32,8 @@ const envSchema = z.object({
   GOOGLE_MAPS_API_KEY: z.string(),
 
   WKHTMLTOPDF_URL: z.string(),
+
+  CHROME_PATH: z.string().optional(),
 });
 
 const _env = envSchema.safeParse(process.env);

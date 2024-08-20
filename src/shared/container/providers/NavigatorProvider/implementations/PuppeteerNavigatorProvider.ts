@@ -1,3 +1,4 @@
+import { env } from '@env';
 import puppeteer, { Browser, Page } from 'puppeteer';
 
 import { AppError } from '@shared/errors/AppError';
@@ -11,6 +12,7 @@ export class PuppeteerNavigatorProvider implements INavigatorProvider {
     if (!this.browser) {
       this.browser = await puppeteer.launch({
         headless: 'new',
+        executablePath: env.CHROME_PATH,
       });
     }
   }
