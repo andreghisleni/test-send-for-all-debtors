@@ -35,6 +35,6 @@ COPY --from=build /app/prisma ./prisma
 
 RUN npx prisma generate
 
-EXPOSE 3333
+EXPOSE 3334
 
 CMD [ "node", "./dist/shared/infra/backendJobs/bullboard.js" ]
