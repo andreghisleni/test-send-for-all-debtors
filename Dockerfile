@@ -35,6 +35,8 @@ COPY --from=build /app/prisma ./prisma
 
 RUN npx prisma generate
 
+RUN node node_modules/puppeteer/install.js
+
 EXPOSE 3333
 
 CMD [ "node", "./dist/shared/infra/http/server.js" ]
