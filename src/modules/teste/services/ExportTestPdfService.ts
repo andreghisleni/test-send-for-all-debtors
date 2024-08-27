@@ -1,6 +1,5 @@
 import { formatValueToBRL } from '@utils/formatValueToBRL';
-import { formatInTimeZone } from 'date-fns-tz';
-import { ptBR } from 'date-fns/locale/pt-BR';
+import { format } from 'date-fns';
 import path from 'node:path';
 import { inject, injectable } from 'tsyringe';
 
@@ -72,14 +71,7 @@ export class ExportTestPdfService {
           obs: item.venda?.obs,
           name: item.client?.nome,
           coin: item.coin?.codigo,
-          date: formatInTimeZone(
-            new Date(item.coletiva?.data || ''),
-            'America/Sao_Paulo',
-            'dd/MM/yyyy',
-            {
-              locale: ptBR,
-            },
-          ),
+          date: format(new Date(item.coletiva?.data || ''), 'dd/MM/yyyy'),
           qtde: item.qtde,
           value: formatValueToBRL(item?.valor || 0),
         })),
