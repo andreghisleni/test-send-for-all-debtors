@@ -17,6 +17,7 @@ type IResponse = {
 
 type IRequest = {
   number: number;
+  page: number;
 };
 
 @injectable()
@@ -28,7 +29,10 @@ export class ExportTestPdfService {
     private mailTemplateProvider: IMailTemplateProvider,
   ) { }// eslint-disable-line
 
-  public async execute({ number }: IRequest): Promise<IResponse> {
+  public async execute({
+    number,
+    page: pageNumber,
+  }: IRequest): Promise<IResponse> {
     const test = path.resolve(__dirname, '..', 'views', 'teste.hbs');
     const data = await prisma.coletivas_sacola.findMany({
       where: {
@@ -58,6 +62,8 @@ export class ExportTestPdfService {
         qtde: true,
         valor: true,
       },
+      take: 3 * 20,
+      skip: (pageNumber - 1) * 3 * 20,
     });
 
     if (!data) {
@@ -80,7 +86,7 @@ export class ExportTestPdfService {
 
     const page = await this.navigatorProvider.newPage(html);
 
-    const fileName = `${Date.now()}-id-${number}-export-postites.pdf`;
+    const fileName = `${Date.now()}-id-${number}-export-p-${pageNumber}.pdf`;
 
     const filePath = path.resolve(
       __dirname,

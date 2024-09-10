@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
-import { container } from 'tsyringe';
-
 import fs from 'fs/promises';
+import { container } from 'tsyringe';
 
 import { ExportTestHtmlService } from '@modules/teste/services/ExportTestHtmlService';
 import { ExportTestPdfService } from '@modules/teste/services/ExportTestPdfService';
@@ -10,8 +9,11 @@ export class ExportTestController {
   async index(req: Request, res: Response): Promise<void> {
     const exportTestPdf = container.resolve(ExportTestPdfService);
 
+    const page = req.query.page ? Number(req.query.page) : 1;
+
     const file = await exportTestPdf.execute({
       number: Number(req.params.number),
+      page,
     });
 
     res.download(file.file, file.fileName, async () => {
