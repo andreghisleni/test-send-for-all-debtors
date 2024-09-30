@@ -9,9 +9,7 @@ export class ExportExtractDevedoresController {
   async index(req: Request, res: Response): Promise<void> {
     const { email } = req.params;
 
-    const exportExtractAllToToPdf = container.resolve(
-      ExportExtractAllToToPdfService2,
-    );
+    const exportExtractAllToToPdf = container.resolve(ExportExtractAllToToPdfService2);
 
     await exportExtractAllToToPdf.execute({
       email,
@@ -25,9 +23,7 @@ export class ExportExtractDevedoresController {
   async index1(req: Request, res: Response): Promise<void> {
     const { email } = req.params;
 
-    const exportExtractAllToToPdf = container.resolve(
-      ExportExtractAllToToPdfService4,
-    );
+    const exportExtractAllToToPdf = container.resolve(ExportExtractAllToToPdfService4);
 
     await exportExtractAllToToPdf.execute({
       email,

@@ -24,8 +24,9 @@ type IVenda = vendas &
         };
       };
       receber: true;
+      creditos: true;
     };
-  }> & { total: number; totalRecebido: number };
+  }> & { total: number; totalRecebido: number; totalCreditos: number };
 
 interface IDataProps {
   cachePrefix: string;
@@ -96,6 +97,7 @@ class Handle {
           tipo: venda.formapagar?.nomepagamento || '',
         })),
         saldo: formatValueToBRL(venda.totalRecebido - venda.total),
+        totalCreditos: formatValueToBRL(venda.totalCreditos),
         img_pix: 'http://localhost:3333/public/pix.png',
       },
     });

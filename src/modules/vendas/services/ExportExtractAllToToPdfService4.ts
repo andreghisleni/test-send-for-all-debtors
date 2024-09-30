@@ -46,6 +46,11 @@ export class ExportExtractAllToToPdfService4 {
             data: 'asc',
           },
         },
+        creditos: {
+          orderBy: {
+            data: 'asc',
+          },
+        },
       },
       where: {
         status: 1,
@@ -62,6 +67,7 @@ export class ExportExtractAllToToPdfService4 {
         ...devedor,
         total: devedor.produtos.reduce((acc, curr) => acc + (curr.valor || 0) * (curr.qtde || 0), 0) - (devedor.desconto || 0) + (devedor.frete || 0),
         totalRecebido: devedor.receber.reduce((acc, curr) => acc + (curr.valor || 0), 0),
+        totalCreditos: devedor.creditos.reduce((acc, curr) => acc + (curr.valor || 0), 0),
       }))
       .filter(devedor => devedor.total > devedor.totalRecebido);
 
