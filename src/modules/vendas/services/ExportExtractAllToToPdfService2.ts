@@ -48,16 +48,26 @@ export class ExportExtractAllToToPdfService2 {
     private mailTemplateProvider: IMailTemplateProvider,
   ) { } // eslint-disable-line
 
-  private async parseHTML({ extractPdfTemplate, venda }: { extractPdfTemplate: string; venda: IVenda }): Promise<string> {
+  private async parseHTML({
+    extractPdfTemplate,
+    venda,
+  }: {
+    extractPdfTemplate: string;
+    venda: IVenda;
+  }): Promise<string> {
     const fDate = (d: Date | null) => {
       if (!d) return '';
 
-      return d instanceof Date ? format(d, 'dd/MM/yyyy') : format(parseISO(d), 'dd/MM/yyyy');
+      return d instanceof Date
+        ? format(d, 'dd/MM/yyyy')
+        : format(parseISO(d), 'dd/MM/yyyy');
     };
     const fDate2 = (d: Date | null) => {
       if (!d) return '';
 
-      return d instanceof Date ? format(d, 'yyyy-MM-dd') : format(parseISO(d), 'yyyy-MM-dd');
+      return d instanceof Date
+        ? format(d, 'yyyy-MM-dd')
+        : format(parseISO(d), 'yyyy-MM-dd');
     };
 
     return this.mailTemplateProvider.parse({
@@ -78,7 +88,10 @@ export class ExportExtractAllToToPdfService2 {
         })),
         valor_frete: formatValueToBRL(venda.frete || 0),
         valor_desconto: formatValueToBRL(venda.desconto || 0),
-        qtd_total: venda.produtos.reduce((acc, curr) => acc + (curr.qtde || 0), 0),
+        qtd_total: venda.produtos.reduce(
+          (acc, curr) => acc + (curr.qtde || 0),
+          0,
+        ),
         valor_total: formatValueToBRL(venda.total || 0),
         pagamentos: venda.receber.map(pagamento => ({
           data: fDate(pagamento.data),
@@ -93,8 +106,18 @@ export class ExportExtractAllToToPdfService2 {
   }
 
   public async execute({ email }: IRequest): Promise<IResponse> {
-    const extractPdfTemplate = path.resolve(__dirname, '..', 'views', 'extract_pdf.hbs');
-    const sendLinkDownloadTemplate = path.resolve(__dirname, '..', 'views', 'send_link_download.hbs');
+    const extractPdfTemplate = path.resolve(
+      __dirname,
+      '..',
+      'views',
+      'extract_pdf.hbs',
+    );
+    const sendLinkDownloadTemplate = path.resolve(
+      __dirname,
+      '..',
+      'views',
+      'send_link_download.hbs',
+    );
 
     const vendas = await prisma.vendas.findMany({
       include: {
@@ -133,9 +156,22 @@ export class ExportExtractAllToToPdfService2 {
     const devedores = vendas
       .map(devedor => ({
         ...devedor,
-        total: devedor.produtos.reduce((acc, curr) => acc + (curr.valor || 0) * (curr.qtde || 0), 0) - (devedor.desconto || 0) + (devedor.frete || 0),
-        totalRecebido: devedor.receber.reduce((acc, curr) => acc + (curr.valor || 0), 0),
-        totalCreditos: devedor.creditos.reduce((acc, curr) => acc + (curr.valor || 0), 0),
+        total:
+          devedor.produtos.reduce(
+            (acc, curr) => acc + (curr.valor || 0) * (curr.qtde || 0),
+            0,
+          ) -
+          (devedor.desconto || 0) +
+          (devedor.frete || 0) -
+          devedor.creditos.reduce((acc, curr) => acc + (curr.valor || 0), 0),
+        totalRecebido: devedor.receber.reduce(
+          (acc, curr) => acc + (curr.valor || 0),
+          0,
+        ),
+        totalCreditos: devedor.creditos.reduce(
+          (acc, curr) => acc + (curr.valor || 0),
+          0,
+        ),
       }))
       .filter(devedor => devedor.total > devedor.totalRecebido);
 

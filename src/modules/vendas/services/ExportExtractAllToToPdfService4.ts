@@ -25,8 +25,18 @@ export class ExportExtractAllToToPdfService4 {
   ) { } // eslint-disable-line
 
   public async execute({ email }: IRequest): Promise<IResponse> {
-    const extractPdfTemplate = path.resolve(__dirname, '..', 'views', 'extract_pdf.hbs');
-    const sendLinkDownloadTemplate = path.resolve(__dirname, '..', 'views', 'send_link_download.hbs');
+    const extractPdfTemplate = path.resolve(
+      __dirname,
+      '..',
+      'views',
+      'extract_pdf.hbs',
+    );
+    const sendLinkDownloadTemplate = path.resolve(
+      __dirname,
+      '..',
+      'views',
+      'send_link_download.hbs',
+    );
 
     const vendas = await prisma.vendas.findMany({
       include: {
@@ -65,9 +75,22 @@ export class ExportExtractAllToToPdfService4 {
     const devedores = vendas
       .map(devedor => ({
         ...devedor,
-        total: devedor.produtos.reduce((acc, curr) => acc + (curr.valor || 0) * (curr.qtde || 0), 0) - (devedor.desconto || 0) + (devedor.frete || 0),
-        totalRecebido: devedor.receber.reduce((acc, curr) => acc + (curr.valor || 0), 0),
-        totalCreditos: devedor.creditos.reduce((acc, curr) => acc + (curr.valor || 0), 0),
+        total:
+          devedor.produtos.reduce(
+            (acc, curr) => acc + (curr.valor || 0) * (curr.qtde || 0),
+            0,
+          ) -
+          (devedor.desconto || 0) +
+          (devedor.frete || 0) -
+          devedor.creditos.reduce((acc, curr) => acc + (curr.valor || 0), 0),
+        totalRecebido: devedor.receber.reduce(
+          (acc, curr) => acc + (curr.valor || 0),
+          0,
+        ),
+        totalCreditos: devedor.creditos.reduce(
+          (acc, curr) => acc + (curr.valor || 0),
+          0,
+        ),
       }))
       .filter(devedor => devedor.total > devedor.totalRecebido);
 
@@ -77,7 +100,15 @@ export class ExportExtractAllToToPdfService4 {
 
     const folderName = `devedores-extratos-${new Date().getTime()}`;
 
-    const folderPath = path.resolve(__dirname, '..', '..', '..', '..', 'tmp', `${folderName}`);
+    const folderPath = path.resolve(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      '..',
+      'tmp',
+      `${folderName}`,
+    );
 
     if (!fs.existsSync(folderPath)) {
       fs.mkdirSync(folderPath);
