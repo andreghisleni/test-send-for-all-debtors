@@ -48,6 +48,7 @@ export class ExportExtractToToPdfService {
             data: 'asc',
           },
         },
+        creditos: true,
       },
       where: {
         id_venda,
@@ -66,8 +67,13 @@ export class ExportExtractToToPdfService {
           0,
         ) -
         (devedor.desconto || 0) +
-        (devedor.frete || 0),
+        (devedor.frete || 0) -
+        devedor.creditos.reduce((acc, curr) => acc + (curr.valor || 0), 0),
       totalRecebido: devedor.receber.reduce(
+        (acc, curr) => acc + (curr.valor || 0),
+        0,
+      ),
+      totalCreditos: devedor.creditos.reduce(
         (acc, curr) => acc + (curr.valor || 0),
         0,
       ),
@@ -194,6 +200,7 @@ export class ExportExtractToToPdfService {
             tipo: devedor.formapagar?.nomepagamento || '',
           })),
           saldo: formatValueToBRL(devedore.totalRecebido - devedore.total),
+          totalCreditos: formatValueToBRL(devedore.totalCreditos),
           img_pix: `${env.APP_API_URL}/public/pix.png`,
         },
       });
