@@ -249,7 +249,7 @@ model sacola {
   moeda      Int?
   qtde       Int?
   valor      Float?    @db.Float
-  datasaida  DateTime? @db.Date
+  datasaida  DateTime? @db.Date()
   codcliente Int?
   vendedor   Int?
   id_venda   Int

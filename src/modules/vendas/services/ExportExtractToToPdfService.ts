@@ -12,12 +12,13 @@ import { prisma } from '@shared/infra/prisma';
 
 interface IRequest {
   id_venda: number;
-  type: 'pdf' | 'html';
+  type: 'pdf' | 'html' | 'json';
 }
 
 interface IResponse {
   html: string;
   pdf: Buffer;
+  json: Record<string, unknown>;
 }
 @injectable()
 export class ExportExtractToToPdfService {
@@ -238,6 +239,7 @@ export class ExportExtractToToPdfService {
             tipo: devedor.formapagar?.nomepagamento || '',
           })),
           saldo: formatValueToBRL(devedore.totalRecebido - devedore.total),
+          totalCreditos: formatValueToBRL(devedore.totalCreditos),
           img_pix: 'http://localhost:3333/public/pix.png',
         },
       });
@@ -280,9 +282,47 @@ export class ExportExtractToToPdfService {
       await browser.close();
     }
 
+    let json = {};
+
+    if (type === 'json') {
+      json = {
+        devedor,
+        devedore,
+        variables: {
+          id_venda: devedore.id_venda,
+          nome_cliente: devedore.clientes?.nome || '',
+          data_venda: fDate(devedore.data),
+          produtos: devedore.produtos.map(produto => ({
+            nome: produto.product?.nome || '',
+            data: fDate(produto.datasaida),
+            code: produto.product?.codigo || '',
+            ano: produto.product?.ano || '',
+            origem: produto.product?.country?.nomepais || '',
+            quantidade: produto.qtde || 0,
+            valor: formatValueToBRL(produto.valor || 0),
+          })),
+          valor_frete: formatValueToBRL(devedore.frete || 0),
+          valor_desconto: formatValueToBRL(devedore.desconto || 0),
+          qtd_total: devedore.produtos.reduce(
+            (acc, curr) => acc + (curr.qtde || 0),
+            0,
+          ),
+          valor_total: formatValueToBRL(devedore.total || 0),
+          pagamentos: devedore.receber.map(pagamento => ({
+            data: fDate(pagamento.data),
+            valor: formatValueToBRL(pagamento.valor || 0),
+            tipo: devedor.formapagar?.nomepagamento || '',
+          })),
+          saldo: formatValueToBRL(devedore.totalRecebido - devedore.total),
+          totalCreditos: formatValueToBRL(devedore.totalCreditos),
+        },
+      };
+    }
+
     return {
       pdf: buffer,
       html,
+      json,
     };
   }
 }
