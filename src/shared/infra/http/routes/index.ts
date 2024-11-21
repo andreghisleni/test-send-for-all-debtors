@@ -7,6 +7,7 @@ import { redisConfig } from '@config/redis';
 import { prisma } from '@shared/infra/prisma';
 
 import { routesClients } from '@modules/clientes/infra/http/routes';
+import { routesProduct } from '@modules/product/infra/http/routes';
 import { routesTest } from '@modules/teste/infra/http/routes';
 import { routesVendas } from '@modules/vendas/infra/http/routes';
 
@@ -15,6 +16,7 @@ const routes = Router();
 routes.use('/vendas', routesVendas);
 routes.use('/clients', routesClients);
 routes.use('/postite', routesTest);
+routes.use('/products', routesProduct);
 
 const redisClient = redis.createClient({
   host: redisConfig.host,

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+
+      width: 100vw;
+
+      overflow-x: hidden;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    .padding {
+      width: 105mm;
+
+      display: grid;
+
+      grid-template-columns: repeat(3, 1fr);
+
+      column-gap: 4.5mm;
+      row-gap: .4mm;
+    }
+
+    .box {
+      width: 33mm;
+      height: 22mm;
+      border: 0px solid red;
+      padding: 2mm 2mm;
+
+      font-size: 8px;
+
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+
+      white-space: nowrap;
+
+      overflow: hidden;
+    }
+
+    .name {
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+
+<body class="padding">
+  <div class="box">
+    <p>{{name}}</p>
+    <p class="name">{{product.name}}</p>
+    <img src="data:image/png;base64, {{barcode}}" />
+    <p>{{product.code}}</p>
+  </div>
+  <div class="box">
+    <p>{{name}}</p>
+    <p class="name">{{product.name}}</p>
+    <img src="data:image/png;base64, {{barcode}}" />
+    <p>{{product.code}}</p>
+  </div>
+  <div class="box">
+    <p>{{name}}</p>
+    <p class="name">{{product.name}}</p>
+    <img src="data:image/png;base64, {{barcode}}" />
+    <p>{{product.code}}</p>
+  </div>
+</body>
+
+</html>
