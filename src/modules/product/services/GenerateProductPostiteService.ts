@@ -42,7 +42,7 @@ export class GenerateProductPostiteService {
       bcid: 'code128', // Tipo de código de barras
       text: product.codigo || 'hi', // Texto a ser codificado
       scale: 3, // Escala do código de barras
-      height: 10, // Altura do código de barras
+      height: 7, // Altura do código de barras
       // includetext: true, // Incluir o texto no código de barras
       textxalign: 'center', // Alinhamento do texto
     });
