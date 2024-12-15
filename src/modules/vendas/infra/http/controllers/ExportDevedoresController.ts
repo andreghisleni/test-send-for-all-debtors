@@ -6,9 +6,7 @@ import { ExportDevedoresToExelService } from '@modules/vendas/services/ExportDev
 
 export class ExportDevedoresController {
   async index(req: Request, res: Response): Promise<void> {
-    const exportDevedoresToExel = container.resolve(
-      ExportDevedoresToExelService,
-    );
+    const exportDevedoresToExel = container.resolve(ExportDevedoresToExelService);
 
     const file = await exportDevedoresToExel.execute();
 

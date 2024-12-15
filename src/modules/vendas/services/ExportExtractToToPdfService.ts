@@ -62,22 +62,9 @@ export class ExportExtractToToPdfService {
 
     const devedore = {
       ...devedor,
-      total:
-        devedor.produtos.reduce(
-          (acc, curr) => acc + (curr.valor || 0) * (curr.qtde || 0),
-          0,
-        ) -
-        (devedor.desconto || 0) +
-        (devedor.frete || 0) -
-        devedor.creditos.reduce((acc, curr) => acc + (curr.valor || 0), 0),
-      totalRecebido: devedor.receber.reduce(
-        (acc, curr) => acc + (curr.valor || 0),
-        0,
-      ),
-      totalCreditos: devedor.creditos.reduce(
-        (acc, curr) => acc + (curr.valor || 0),
-        0,
-      ),
+      total: devedor.produtos.reduce((acc, curr) => acc + (curr.valor || 0) * (curr.qtde || 0), 0) - (devedor.desconto || 0) + (devedor.frete || 0) - devedor.creditos.reduce((acc, curr) => acc + (curr.valor || 0), 0),
+      totalRecebido: devedor.receber.reduce((acc, curr) => acc + (curr.valor || 0), 0),
+      totalCreditos: devedor.creditos.reduce((acc, curr) => acc + (curr.valor || 0), 0),
     };
 
     const fDate = (d: Date | null) => (d ? format(d, 'dd/MM/yyyy') : '');
@@ -122,12 +109,7 @@ export class ExportExtractToToPdfService {
     //   ],
     // });
 
-    const extractPdfTemplate = path.resolve(
-      __dirname,
-      '..',
-      'views',
-      'extract_pdf.hbs',
-    );
+    const extractPdfTemplate = path.resolve(__dirname, '..', 'views', 'extract_pdf.hbs');
 
     // await this.mailProvider.sendMail({
     //   to: {
@@ -190,10 +172,7 @@ export class ExportExtractToToPdfService {
           })),
           valor_frete: formatValueToBRL(devedore.frete || 0),
           valor_desconto: formatValueToBRL(devedore.desconto || 0),
-          qtd_total: devedore.produtos.reduce(
-            (acc, curr) => acc + (curr.qtde || 0),
-            0,
-          ),
+          qtd_total: devedore.produtos.reduce((acc, curr) => acc + (curr.qtde || 0), 0),
           valor_total: formatValueToBRL(devedore.total || 0),
           pagamentos: devedore.receber.map(pagamento => ({
             data: fDate(pagamento.data),
@@ -228,10 +207,7 @@ export class ExportExtractToToPdfService {
           })),
           valor_frete: formatValueToBRL(devedore.frete || 0),
           valor_desconto: formatValueToBRL(devedore.desconto || 0),
-          qtd_total: devedore.produtos.reduce(
-            (acc, curr) => acc + (curr.qtde || 0),
-            0,
-          ),
+          qtd_total: devedore.produtos.reduce((acc, curr) => acc + (curr.qtde || 0), 0),
           valor_total: formatValueToBRL(devedore.total || 0),
           pagamentos: devedore.receber.map(pagamento => ({
             data: fDate(pagamento.data),
@@ -275,8 +251,7 @@ export class ExportExtractToToPdfService {
           left: '1.5cm',
         },
         headerTemplate: '<div />',
-        footerTemplate:
-          '<div style="font-size: 11px !important; overflow: auto; margin-left: 1.5cm; margin-right: 1.5cm; color: ghostwhite;">Página <span class="pageNumber"></span> de <span class="totalPages"></span></div>',
+        footerTemplate: '<div style="font-size: 11px !important; overflow: auto; margin-left: 1.5cm; margin-right: 1.5cm; color: ghostwhite;">Página <span class="pageNumber"></span> de <span class="totalPages"></span></div>',
       });
 
       await browser.close();
@@ -303,10 +278,7 @@ export class ExportExtractToToPdfService {
           })),
           valor_frete: formatValueToBRL(devedore.frete || 0),
           valor_desconto: formatValueToBRL(devedore.desconto || 0),
-          qtd_total: devedore.produtos.reduce(
-            (acc, curr) => acc + (curr.qtde || 0),
-            0,
-          ),
+          qtd_total: devedore.produtos.reduce((acc, curr) => acc + (curr.qtde || 0), 0),
           valor_total: formatValueToBRL(devedore.total || 0),
           pagamentos: devedore.receber.map(pagamento => ({
             data: fDate(pagamento.data),
