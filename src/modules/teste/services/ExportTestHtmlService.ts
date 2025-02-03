@@ -49,6 +49,7 @@ export class ExportTestHtmlService {
         },
         client: {
           select: {
+            id: true,
             nome: true,
           },
         },
@@ -77,6 +78,7 @@ export class ExportTestHtmlService {
           date: format(new Date(item.coletiva?.data || ''), 'dd/MM/yyyy'),
           qtde: item.qtde,
           value: formatValueToBRL(item?.valor || 0),
+          clientId: item.client.id,
         })),
       },
     });

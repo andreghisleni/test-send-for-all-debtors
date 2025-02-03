@@ -29,10 +29,7 @@ export class ExportTestPdfService {
     private mailTemplateProvider: IMailTemplateProvider,
   ) { }// eslint-disable-line
 
-  public async execute({
-    number,
-    page: pageNumber,
-  }: IRequest): Promise<IResponse> {
+  public async execute({ number, page: pageNumber }: IRequest): Promise<IResponse> {
     const test = path.resolve(__dirname, '..', 'views', 'teste.hbs');
     const data = await prisma.coletivas_sacola.findMany({
       where: {
@@ -46,6 +43,7 @@ export class ExportTestPdfService {
         },
         client: {
           select: {
+            id: true,
             nome: true,
           },
         },
@@ -80,6 +78,7 @@ export class ExportTestPdfService {
           date: format(new Date(item.coletiva?.data || ''), 'dd/MM/yyyy'),
           qtde: item.qtde,
           value: formatValueToBRL(item?.valor || 0),
+          clientId: item.client.id,
         })),
       },
     });
@@ -88,22 +87,9 @@ export class ExportTestPdfService {
 
     const fileName = `${Date.now()}-id-${number}-export-p-${pageNumber}.pdf`;
 
-    const filePath = path.resolve(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      '..',
-      'tmp',
-      'uploads',
-      fileName,
-    );
+    const filePath = path.resolve(__dirname, '..', '..', '..', '..', 'tmp', 'uploads', fileName);
 
-    const buffer = await this.navigatorProvider.savePdf(
-      page,
-      filePath,
-      'postite',
-    );
+    const buffer = await this.navigatorProvider.savePdf(page, filePath, 'postite');
 
     await this.navigatorProvider.closePage(page);
 
