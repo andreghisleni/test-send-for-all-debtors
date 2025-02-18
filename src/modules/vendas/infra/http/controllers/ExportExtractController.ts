@@ -8,6 +8,8 @@ export class ExportExtractController {
   async show(req: Request, res: Response): Promise<void> {
     const { id_venda, type } = req.params;
 
+    return res.redirect(`https://financeiro.marconnumis.com.br/sale/${id_venda}`);
+
     const exportDevedoresToExel = container.resolve(ExportExtractToToPdfService);
 
     const typeSchema = z.enum(['pdf', 'html', 'json']).default('html');
